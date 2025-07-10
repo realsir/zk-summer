@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>zkSummer</title>
+  <!-- Подключаем Titillium Web с Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+
+    .background {
+      position: relative;
+      width: 100vw; height: 100vh;
+      background-image: url('zk1.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+    }
+
+    /* 3D надпись сверху по середине */
+    .title-3d {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffc0cb;
+      font-size: 55px;
+      font-weight: bold;
+      text-align: center;
+      user-select: none;
+      z-index: 30;
+      text-shadow:
+        1px 1px 0 #d19fb3,
+        2px 2px 0 #a97e93,
+        3px 3px 0 #805c74,
+        4px 4px 5px rgba(0, 0, 0, 0.5);
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+    .title-3d .succinct {
+      color: #d706d4;
+    }
+
+    /* Вертикальный контейнер бегущей строки с розовым фоном */
+    .vertical-marquee-container {
+      position: fixed;
+      top: 0;
+      width: 85px;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: #ffb6c1;
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+    .vertical-marquee-container.left {
+      left: 0;
+      border-radius: 0 10px 10px 0;
+    }
+    .vertical-marquee-container.right {
+      right: 0;
+      border-radius: 10px 0 0 10px;
+    }
+
+    /* Контейнер с контентом для анимации */
+    .vertical-marquee-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: black;
+      font-size: 0;
+      line-height: 2.5em;
+      animation: verticalScroll 40s linear infinite;
+      user-select: none;
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+    .vertical-marquee-container.right .vertical-marquee-content {
+      animation-direction: reverse;
+    }
+
+    .vertical-marquee-content img {
+      width: 60px;
+      height: 60px;
+      margin: 0 2px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    @keyframes verticalScroll {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-50%);
+      }
+    }
+
+    /* Контейнер иконок с подписями (общий стиль) */
+    .icon-wrapper {
+        position: absolute;
+        width: 62px;
+        text-align: center;
+        cursor: pointer;
+        z-index: 20;
+        user-select: none;
+        font-family: 'Titillium Web', Arial, sans-serif;
+    }
+
+    .icon-wrapper img.icon {
+        width: 62px;
+        height: 52px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .icon-wrapper .icon-label {
+        margin-top: 5px;
+        color: pink;
+        font-weight: bold;
+        font-size: 16px;
+        font-family: 'Titillium Web', Arial, sans-serif;
+    }
+
+    /* Отдельные позиции для каждой иконки */
+    .evil-zkegg-icon {
+        top: 120px;
+        left: 100px;
+    }
+
+    .dont-click-icon {
+        top: 250px;
+        left: 100px;
+    }
+
+    /* Иконка dev с курсором pointer */
+    .dev-icon {
+      position: fixed;
+      bottom: 60px;
+      right: 120px;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      z-index: 20;
+      user-select: none;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      display: block;
+      margin: 0 auto;
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+
+    .dev-label {
+      position: fixed;
+      bottom: 20px;
+      right: 120px;
+      width: 60px;
+      text-align: center;
+      color: pink;
+      font-weight: bold;
+      font-size: 14px;
+      font-family: 'Titillium Web', Arial, sans-serif;
+      user-select: none;
+      z-index: 20;
+    }
+
+    /* Модальные окна */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vw;
+      height: 80vh;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      z-index: 100;
+      overflow: hidden;
+      padding: 0;
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      user-select: none;
+      z-index: 101;
+      font-family: 'Titillium Web', Arial, sans-serif;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 90;
+    }
+
+    .modal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="background">
+
+    <!-- 3D надпись сверху по середине с выделенным словом Succinct -->
+    <div class="title-3d">zkSummer with <span class="succinct">Succinct</span></div>
+
+    <!-- Левая вертикальная бегущая строка с розовым фоном -->
+    <div class="vertical-marquee-container left" aria-hidden="true">
+      <div class="vertical-marquee-content" aria-hidden="true" id="leftMarquee">
+        <!-- Картинки будут вставлены через JS -->
+      </div>
+    </div>
+
+    <!-- Правая вертикальная бегущая строка с розовым фоном -->
+    <div class="vertical-marquee-container right" aria-hidden="true">
+      <div class="vertical-marquee-content" aria-hidden="true" id="rightMarquee">
+        <!-- Картинки будут вставлены через JS -->
+      </div>
+    </div>
+
+    <!-- Иконка Evil zkEgg -->
+    <div class="icon-wrapper evil-zkegg-icon" id="openEvilZkEgg">
+      <img src="egg.png" alt="Иконка игры" class="icon" title="Открыть игру" />
+      <div class="icon-label">Evil zkEgg</div>
+    </div>
+
+    <!-- НОВАЯ Иконка DON'T CLICK! -->
+    <div class="icon-wrapper dont-click-icon" id="openDontClick">
+      <img src="krest.png" alt="Не нажимать" class="icon" title="Не нажимать!" />
+      <div class="icon-label">DON'T CLICK!</div>
+    </div>
+
+  </div>
+
+  <!-- Иконка разработчика в правом нижнем углу, кликабельная -->
+  <img src="dev.png" alt="Developer" class="dev-icon" id="devIcon" />
+  <div class="dev-label">realsir (dev)</div>
+
+  <!-- Затемнение -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Модальные окна -->
+  <div class="modal" id="modalEvilZkEgg">
+    <div class="close-btn" id="closeEvilZkEgg">&times;</div>
+    <iframe src="" title="Игра Evil zkEgg" id="iframeEvilZkEgg"></iframe>
+  </div>
+
+  <div class="modal" id="modalDev">
+    <div class="close-btn" id="closeDev">&times;</div>
+    <iframe src="" title="Dev page" id="iframeDev"></iframe>
+  </div>
+
+  <!-- НОВОЕ Модальное окно для DON'T CLICK! -->
+  <div class="modal" id="modalDontClick">
+    <div class="close-btn" id="closeDontClick">&times;</div>
+    <iframe src="" title="Don't Click Page" id="iframeDontClick"></iframe>
+  </div>
+
+  <script>
+    // Массив с путями к картинкам
+    const images = [
+      'purple.gpu.png',
+      'orange.gpu.png',
+      'green.gpu.png',
+      'blue.gpu.png',
+      'pink.gpu.png'
+    ];
+
+    // Функция для создания длинной последовательности картинок
+    function createImageSequence(containerId) {
+      const container = document.getElementById(containerId);
+      const repeatCount = 20; // сколько раз повторять последовательность
+
+      for (let i = 0; i < repeatCount; i++) {
+        for (const src of images) {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = 'gpu icon';
+          container.appendChild(img);
+        }
+      }
+    }
+
+    createImageSequence('leftMarquee');
+    createImageSequence('rightMarquee');
+
+    // Существующий код для модальных окон и иконок
+    const overlay = document.getElementById('overlay');
+
+    // Элементы Evil zkEgg
+    const openEvilZkEggBtn = document.getElementById('openEvilZkEgg');
+    const modalEvilZkEgg = document.getElementById('modalEvilZkEgg');
+    const closeEvilZkEggBtn = document.getElementById('closeEvilZkEgg');
+    const iframeEvilZkEgg = document.getElementById('iframeEvilZkEgg');
+
+    // Элементы dev
+    const openDevBtn = document.getElementById('devIcon');
+    const modalDev = document.getElementById('modalDev');
+    const closeDevBtn = document.getElementById('closeDev');
+    const iframeDev = document.getElementById('iframeDev');
+
+    // НОВЫЕ Элементы DON'T CLICK!
+    const openDontClickBtn = document.getElementById('openDontClick');
+    const modalDontClick = document.getElementById('modalDontClick');
+    const closeDontClickBtn = document.getElementById('closeDontClick');
+    const iframeDontClick = document.getElementById('iframeDontClick');
+
+    // Функция открытия модального окна с загрузкой iframe
+    function openModal(modal, iframe, src) {
+      // Скрываем ВСЕ модальные окна и очищаем ВСЕ iframe src
+      modalEvilZkEgg.style.display = 'none';
+      iframeEvilZkEgg.src = '';
+      modalDev.style.display = 'none';
+      iframeDev.src = '';
+      modalDontClick.style.display = 'none';
+      iframeDontClick.src = '';
+
+      // Открываем нужное окно и загружаем src
+      iframe.src = src;
+      modal.style.display = 'block';
+      overlay.style.display = 'block';
+    }
+
+    // Функция закрытия модального окна
+    function closeModal(modal, iframe) {
+      modal.style.display = 'none';
+      iframe.src = '';
+      overlay.style.display = 'none';
+    }
+
+    openEvilZkEggBtn.addEventListener('click', () => {
+      openModal(modalEvilZkEgg, iframeEvilZkEgg, 'ferris2.0.html');
+    });
+
+    closeEvilZkEggBtn.addEventListener('click', () => {
+      closeModal(modalEvilZkEgg, iframeEvilZkEgg);
+    });
+
+    openDevBtn.addEventListener('click', () => {
+      openModal(modalDev, iframeDev, 'dev.html');
+    });
+
+    closeDevBtn.addEventListener('click', () => {
+      closeModal(modalDev, iframeDev);
+    });
+
+    openDontClickBtn.addEventListener('click', () => {
+      openModal(modalDontClick, iframeDontClick, 'dontclick.html');
+    });
+
+    closeDontClickBtn.addEventListener('click', () => {
+      closeModal(modalDontClick, iframeDontClick);
+    });
+
+    overlay.addEventListener('click', () => {
+      closeModal(modalEvilZkEgg, iframeEvilZkEgg);
+      closeModal(modalDev, iframeDev);
+      closeModal(modalDontClick, iframeDontClick);
+    });
+  </script>
+</body>
+</html>
