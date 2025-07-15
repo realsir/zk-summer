@@ -4,12 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>zkFerris</title>
-<!-- Подключаем Titillium Web -->
 <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap" rel="stylesheet" />
 <style>
   body, html {
     margin: 0; padding: 0; height: 100%; width: 100%;
-    background: #ffe6f0;
+    background: #ffd1e3;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,6 +22,7 @@
     background: #222;
     border: 4px solid #555;
     box-sizing: border-box;
+    overflow: hidden;
   }
   .cell {
     position: absolute;
@@ -33,10 +33,30 @@
   .wall {
     background: #444;
   }
-  .player, .enemy, .item1, .item2 {
+  .player {
     width: 32px;
     height: 32px;
     position: absolute;
+    transition: top 0.18s cubic-bezier(.4,1.2,.4,1), left 0.18s cubic-bezier(.4,1.2,.4,1);
+  }
+  .enemy {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    transition: top 2s cubic-bezier(.4,1.2,.4,1), left 2s cubic-bezier(.4,1.2,.4,1);
+  }
+  .enemy2 {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    filter: drop-shadow(0 0 6px #2cf);
+    transition: top 0.5s cubic-bezier(.4,1.2,.4,1), left 0.5s cubic-bezier(.4,1.2,.4,1);
+  }
+  .item1, .item2 {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    transition: top 0.18s cubic-bezier(.4,1.2,.4,1), left 0.18s cubic-bezier(.4,1.2,.4,1);
   }
   #score {
     position: absolute;
@@ -47,6 +67,7 @@
     font-weight: bold;
     z-index: 1000;
     font-family: 'Titillium Web', Arial, sans-serif;
+    display: none;
   }
   #gameOver {
     position: absolute;
@@ -83,26 +104,26 @@
     background-color: #4CAF50;
     color: white;
   }
-
-  /* Новая компактная плашка с инструкцией */
   #instructionOverlay {
     position: fixed;
     top: 0; left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(255, 182, 193, 0.9);
+    background: #ffd1e3;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 2000;
+    overflow: hidden;
   }
   #instructionBox {
-    background: #ffb6c1;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(255,182,193,0.35);
-    padding: 24px 30px 20px 30px;
-    min-width: 320px;
-    max-width: 340px;
+    width: 340px;
+    min-height: 360px;
+    background: #ff7eb9;
+    border: 4px solid #111;
+    border-radius: 36px;
+    box-shadow: none;
+    padding: 18px 18px 10px 18px;
     font-size: 18px;
     color: #8B008B;
     font-weight: 600;
@@ -111,31 +132,74 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+  }
+  #instructionBox .title {
+    font-size: 23px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #a700a7;
+    letter-spacing: 1px;
+  }
+  #instructionBox .desc {
+    font-size: 15.5px;
+    font-weight: 400;
+    margin-bottom: 18px;
+    color: #8B008B;
+    line-height: 1.5;
   }
   #instructionBox .arrows {
-    margin: 12px 0 10px 0;
-    font-size: 28px;
+    margin: 10px 0 10px 0;
+    font-size: 27px;
     user-select: none;
     letter-spacing: 6px;
   }
-  #toGameBtn {
-    margin-top: 12px;
+  .mode-btn {
+    margin: 8px 0 0 0;
     padding: 10px 24px;
     font-size: 17px;
-    background: #d706d4;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
     font-family: 'Titillium Web', Arial, sans-serif;
-    font-weight: 600;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.2s;
+    color: #fff;
   }
-  #toGameBtn:hover, #toGameBtn:focus {
-    background: #b005b0;
+  #frendlyBtn {
+    background: #33b233;
   }
-
-  /* Анимация +1 zkCap */
+  #frendlyBtn:hover, #frendlyBtn:focus {
+    background: #248b24;
+  }
+  #evilBtn {
+    background: #d7063b;
+    margin-left: 10px;
+  }
+  #evilBtn:hover, #evilBtn:focus {
+    background: #a70020;
+  }
+  .flying-eggs-bg {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .egg-fly-bg {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    pointer-events: none;
+    will-change: transform;
+    filter: drop-shadow(0 2px 8px #d706d466);
+    opacity: 0.82;
+    transition: filter 0.2s;
+  }
   .zkcap-popup {
     position: fixed;
     font-family: 'Titillium Web', Arial, sans-serif;
@@ -152,7 +216,21 @@
   .zkcap-popup.hat2 {
     color: deepskyblue;
   }
-
+  .trail-cell {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: rgba(215,6,59,0.22);
+    box-shadow: 0 0 12px 2px #d7063b62 inset;
+    z-index: 120;
+    pointer-events: none;
+    border-radius: 8px;
+    animation: fadeTrail 0.5s linear forwards;
+  }
+  @keyframes fadeTrail {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
   @keyframes floatUpFade {
     0% {
       opacity: 1;
@@ -166,129 +244,205 @@
 </style>
 </head>
 <body>
-
 <div id="game">
-  <div id="score">Score: 0</div>
+  <div id="score" style="display:none;">Score: 0</div>
   <div id="gameOver">
     EVIL EGG WON!
     <div class="score-value" id="finalScore"></div>
     <button id="restartBtn">Restart</button>
   </div>
 </div>
-
-<!-- Компактная плашка-инструкция -->
-<div id="instructionOverlay">
+<div id="instructionOverlay" style="display: flex;">
+  <div class="flying-eggs-bg" id="flyingEggsBg"></div>
   <div id="instructionBox">
-    gProve, it's an Evil zkEgg game.<br>
-    Run away from evil zkEggs and collect zkCaps.
-    <div style="margin: 10px 0 0 0; font-size:16px; color:#a700a7; font-weight:400;">
-      1. Click the button below<br>
-      2. Control your character with the arrows:
+    <div class="title">Evil zkEgg Game.</div>
+    <div class="desc">
+      Your task is to collect as many zkCaps as possible and not get caught by the evil eggs.<br><br>
+      Controls: arrows on your keyboard.<br><br>
+      <span style="color:#2c8a2c;font-weight:600;">Frendly Mode</span> - simple mode, just chill.<br>
+      <span style="color:#d7063b;font-weight:600;">Evil Mode</span> - unlikely you will be able to collect at least 20 zkCaps.
     </div>
-    <div class="arrows">
-      <span>⬆️</span> <span>⬇️</span> <span>⬅️</span> <span>➡️</span>
+    <div style="margin-top:8px;">
+      <button class="mode-btn" id="frendlyBtn">Frendly Mode</button>
+      <button class="mode-btn" id="evilBtn">Evil Mode</button>
     </div>
-    <button id="toGameBtn">To the game.</button>
   </div>
 </div>
-
 <script>
-  const CELL_SIZE = 32;
-  const ROWS = 17;
-  const COLS = 20;
+  // Анимация летающих яиц на фоне инструкции
+  const eggImgs = ['egg.png', 'egg2.png'];
+  const bgEggCount = 22;
+  const flyingEggsBg = document.getElementById('flyingEggsBg');
+  const bgEggs = [];
+  function vw() { return Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0); }
+  function vh() { return Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0); }
+  for (let i = 0; i < bgEggCount; i++) {
+    const img = document.createElement('img');
+    img.src = eggImgs[i % 2];
+    img.className = 'egg-fly-bg';
+    flyingEggsBg.appendChild(img);
+    bgEggs.push({
+      el: img,
+      x: Math.random() * (vw() - 52),
+      y: Math.random() * (vh() - 52),
+      dx: (Math.random() - 0.5) * 1.7,
+      dy: (Math.random() - 0.5) * 1.7,
+      speed: 0.5 + Math.random() * 1.2,
+      rotate: Math.random() * 360,
+      rotateSpeed: (Math.random() - 0.5) * 1.2
+    });
+  }
+  function animateBgEggs() {
+    const width = vw(), height = vh();
+    for (let egg of bgEggs) {
+      egg.x += egg.dx * egg.speed;
+      egg.y += egg.dy * egg.speed;
+      egg.rotate += egg.rotateSpeed;
+      if (egg.x < 0 || egg.x > width - 52) egg.dx *= -1;
+      if (egg.y < 0 || egg.y > height - 52) egg.dy *= -1;
+      egg.el.style.transform = `translate(${egg.x}px,${egg.y}px) rotate(${egg.rotate}deg)`;
+    }
+    requestAnimationFrame(animateBgEggs);
+  }
+  animateBgEggs();
 
-  // Модифицированный лабиринт с 20 дополнительными проходами (заменены стены на 0 для большей свободы)
-  const maze = [
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
-    [1,0,1,1,1,0,1,0,1,1,0,1,0,1,1,1,1,1,0,1],
-    [1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1],
-    [1,0,1,0,1,1,1,1,1,0,1,1,0,1,0,1,0,1,0,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,0,0,1],
-    [1,1,1,0,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,1],
-    [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1],
-    [1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,0,1],
-    [1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1],
-    [1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,0,1],
-    [1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1],
-    [1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1],
-    [1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1],
-    [1,0,1,0,1,1,1,1,1,0,1,0,1,0,1,1,0,1,0,1],
-    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-  ];
-
-  const game = document.getElementById('game');
-  const scoreDisplay = document.getElementById('score');
-  const gameOverDisplay = document.getElementById('gameOver');
-  const finalScoreDisplay = document.getElementById('finalScore');
-  const restartBtn = document.getElementById('restartBtn');
-  const instructionOverlay = document.getElementById('instructionOverlay');
-  const toGameBtn = document.getElementById('toGameBtn');
-
-  let score = 0;
-  let playerPos;
-  let items = [];
-  let enemies = [];
-  let enemyMoveInterval;
-  let gameStarted = false;
-
-  function isWall(row, col) {
-    return maze[row] && maze[row][col] === 1;
+  // ==== Enemy trail logic ====
+  let activeEnemyTrails = [];
+  function addEnemyTrail(row, col) {
+    activeEnemyTrails.push({
+      row,
+      col,
+      expiresAt: Date.now() + 500
+    });
+    showEnemyTrailCell(row, col);
+  }
+  function cleanupEnemyTrails() {
+    const now = Date.now();
+    activeEnemyTrails = activeEnemyTrails.filter(trail => trail.expiresAt > now);
+    // remove expired .trail-cell
+    document.querySelectorAll('.trail-cell').forEach(cell => {
+      if (Number(cell.getAttribute('data-expire')) < now) cell.remove();
+    });
+  }
+  function showEnemyTrailCell(row, col) {
+    const trailCell = document.createElement('div');
+    trailCell.className = 'trail-cell';
+    trailCell.style.top = (row * 32) + 'px';
+    trailCell.style.left = (col * 32) + 'px';
+    trailCell.setAttribute('data-expire', Date.now() + 500);
+    document.getElementById('game').appendChild(trailCell);
+    setTimeout(() => { if (trailCell.parentNode) trailCell.remove(); }, 520);
+  }
+  function checkTrailCollision() {
+    cleanupEnemyTrails();
+    for(const trail of activeEnemyTrails) {
+      if(trail.row === playerPos.row && trail.col === playerPos.col) {
+        gameOver();
+        return true;
+      }
+    }
+    return false;
   }
 
-  function createWalls() {
-    [...game.querySelectorAll('.cell.wall')].forEach(w => w.remove());
-    for(let r = 0; r < ROWS; r++) {
-      for(let c = 0; c < COLS; c++) {
-        if(maze[r][c] === 1) {
-          const wall = document.createElement('div');
-          wall.className = 'cell wall';
-          wall.style.top = r * CELL_SIZE + 'px';
-          wall.style.left = c * CELL_SIZE + 'px';
-          game.appendChild(wall);
-        }
+  // ---- ИГРА ----
+
+const CELL_SIZE = 32;
+const ROWS = 17;
+const COLS = 20;
+const maze = [
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,0,1,1,0,1,0,1,1,1,1,1,0,1],
+  [1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1],
+  [1,0,1,0,1,1,0,1,1,0,1,1,0,1,0,1,0,1,0,1],
+  [1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1,0,0,0,1],
+  [1,1,1,0,1,0,1,1,0,1,1,0,1,1,0,1,1,1,0,1],
+  [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1],
+  [1,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,1,0,1],
+  [1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,1],
+  [1,1,1,1,0,1,1,0,1,0,1,1,1,1,1,0,1,1,0,1],
+  [1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1],
+  [1,0,1,1,1,0,1,1,0,1,1,0,1,1,0,1,1,1,0,1],
+  [1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1],
+  [1,0,1,0,1,1,0,1,1,0,1,0,1,0,1,1,0,1,0,1],
+  [1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+let score = 0;
+let playerPos;
+let items = [];
+let enemies = [];
+let superEnemies = [];
+let enemyMoveInterval;
+let gameStarted = false;
+let evilMode = false;
+let player;
+let moveQueue = [];
+let moving = false;
+
+const frendlyBtn = document.getElementById('frendlyBtn');
+const evilBtn = document.getElementById('evilBtn');
+const restartBtn = document.getElementById('restartBtn');
+const scoreDisplay = document.getElementById('score');
+const gameOverDisplay = document.getElementById('gameOver');
+const finalScoreDisplay = document.getElementById('finalScore');
+const instructionOverlay = document.getElementById('instructionOverlay');
+const game = document.getElementById('game');
+
+function isWall(row, col) {
+  return maze[row] && maze[row][col] === 1;
+}
+
+function createWalls() {
+  [...game.querySelectorAll('.cell.wall')].forEach(w => w.remove());
+  for(let r = 0; r < ROWS; r++) {
+    for(let c = 0; c < COLS; c++) {
+      if(maze[r][c] === 1) {
+        const wall = document.createElement('div');
+        wall.className = 'cell wall';
+        wall.style.top = r * CELL_SIZE + 'px';
+        wall.style.left = c * CELL_SIZE + 'px';
+        game.appendChild(wall);
       }
     }
   }
+}
 
-  function createPlayer() {
-    const player = document.createElement('img');
-    player.src = 'ferris1.png';
-    player.className = 'player';
-    game.appendChild(player);
-    return player;
-  }
+function createPlayer() {
+  const player = document.createElement('img');
+  player.src = 'ferris1.png';
+  player.className = 'player';
+  game.appendChild(player);
+  return player;
+}
 
-  function placeItem(imgSrc) {
-    while(true) {
-      const r = Math.floor(Math.random() * ROWS);
-      const c = Math.floor(Math.random() * COLS);
-      if(!isWall(r,c) && !(r === playerPos.row && c === playerPos.col)) {
-        if(!items.some(i => i.row === r && i.col === c)) {
-          const item = document.createElement('img');
-          item.src = imgSrc;
-          item.className = (imgSrc === 'hat1.png') ? 'item1' : 'item2';
-          item.style.position = 'fixed';
-          item.style.top = '-100px';
-          item.style.left = '-100px';
-          game.appendChild(item);
-          items.push({el: item, row: r, col: c, type: imgSrc});
-          setTimeout(() => {
-            item.style.position = 'absolute';
-            item.style.top = r * CELL_SIZE + 'px';
-            item.style.left = c * CELL_SIZE + 'px';
-          }, 100);
-          return;
-        }
+function placeItem(imgSrc) {
+  while(true) {
+    const r = Math.floor(Math.random() * ROWS);
+    const c = Math.floor(Math.random() * COLS);
+    if(!isWall(r,c) && !(r === playerPos.row && c === playerPos.col)) {
+      if(!items.some(i => i.row === r && i.col === c)) {
+        const item = document.createElement('img');
+        item.src = imgSrc;
+        item.className = (imgSrc === 'hat1.png') ? 'item1' : 'item2';
+        item.style.position = 'absolute';
+        item.style.top = r * CELL_SIZE + 'px';
+        item.style.left = c * CELL_SIZE + 'px';
+        game.appendChild(item);
+        items.push({el: item, row: r, col: c, type: imgSrc});
+        return;
       }
     }
   }
+}
 
-  function createEnemies() {
-    [...game.querySelectorAll('.enemy')].forEach(e => e.remove());
-    enemies = [];
-    // Начальные позиции и история посещённых клеток
+function createEnemies() {
+  [...game.querySelectorAll('.enemy')].forEach(e => e.remove());
+  [...game.querySelectorAll('.enemy2')].forEach(e => e.remove());
+  enemies = [];
+  superEnemies = [];
+  if (!evilMode) {
     const enemyData = [
       {row: ROWS-2, col: COLS-2},
       {row: 1, col: COLS-2}
@@ -305,254 +459,281 @@
         visited: new Set([data.row + ',' + data.col])
       });
     }
+  } else {
+    for(let i=0; i<5; i++) addSuperEnemy();
   }
+}
 
-  function addEnemy() {
-    while(true) {
-      const r = Math.floor(Math.random() * ROWS);
-      const c = Math.floor(Math.random() * COLS);
-      if(!isWall(r,c) && !(r === playerPos.row && c === playerPos.col) && !enemies.some(e => e.row === r && e.col === c)) {
-        const enemy = document.createElement('img');
-        enemy.src = 'egg.png';
-        enemy.className = 'enemy';
-        game.appendChild(enemy);
-        enemies.push({
-          el: enemy,
-          row: r,
-          col: c,
-          visited: new Set([r + ',' + c])
-        });
-        updatePositions();
-        break;
-      }
-    }
-  }
-
-  function updatePositions() {
-    player.style.top = playerPos.row * CELL_SIZE + 'px';
-    player.style.left = playerPos.col * CELL_SIZE + 'px';
-
-    for(const enemy of enemies) {
-      enemy.el.style.top = enemy.row * CELL_SIZE + 'px';
-      enemy.el.style.left = enemy.col * CELL_SIZE + 'px';
-    }
-
-    for(const item of items) {
-      item.el.style.top = item.row * CELL_SIZE + 'px';
-      item.el.style.left = item.col * CELL_SIZE + 'px';
-    }
-  }
-
-  function checkItemPickup() {
-    for(let i = items.length - 1; i >= 0; i--) {
-      if(items[i].row === playerPos.row && items[i].col === playerPos.col) {
-        const pickedItem = items[i];
-        game.removeChild(pickedItem.el);
-        const type = pickedItem.type;
-        items.splice(i, 1);
-        score++;
-        scoreDisplay.textContent = 'Score: ' + score;
-        placeItem(type);
-
-        // Показать анимацию с разным цветом для hat1 и hat2
-        showZkCapPopup(type);
-
-        // Добавляем врагов при достижении score
-        if(score === 5 && enemies.length === 2) {
-          addEnemy(); // 3 врага
-        }
-        if(score === 10 && enemies.length === 3) {
-          addEnemy(); // 4 врага
-        }
-        if(score === 15 && enemies.length === 4) {
-          addEnemy(); // 5 врагов
-        }
-        if(score === 25 && enemies.length === 5) {
-          addEnemy(); // 6 врагов
-        }
-        if(score === 30 && enemies.length === 6) {
-          addEnemy(); // 7 врагов
-        }
-        if(score === 35 && enemies.length === 7) {
-          addEnemy(); // 8 врагов
-        }
-        if(score === 40 && enemies.length === 8) {
-          addEnemy(); // 9 врагов
-        }
-        if(score === 45 && enemies.length === 9) {
-          addEnemy(); // 10 врагов
-        }
-      }
-    }
-  }
-
-  function showZkCapPopup(type) {
-    const popup = document.createElement('div');
-    popup.className = 'zkcap-popup';
-    popup.textContent = '+1 zkCap';
-    if(type === 'hat1.png') {
-      popup.style.color = 'purple';
-    } else if(type === 'hat2.png') {
-      popup.style.color = 'deepskyblue';
-    } else {
-      popup.style.color = '#d706d4';
-    }
-    const rect = game.getBoundingClientRect();
-    const playerX = rect.left + playerPos.col * CELL_SIZE + CELL_SIZE / 2;
-    const playerY = rect.top + playerPos.row * CELL_SIZE;
-    popup.style.left = playerX + 'px';
-    popup.style.top = playerY + 'px';
-    document.body.appendChild(popup);
-
-    setTimeout(() => {
-      popup.remove();
-    }, 2000);
-  }
-
-  function checkEnemyCollision() {
-    for(const enemy of enemies) {
-      if(enemy.row === playerPos.row && enemy.col === playerPos.col) {
-        gameOver();
-        break;
-      }
-    }
-  }
-
-  function gameOver() {
-    gameOverDisplay.style.display = 'block';
-    finalScoreDisplay.textContent = 'Score: ' + score;
-    document.removeEventListener('keydown', handleKey);
-    clearInterval(enemyMoveInterval);
-  }
-
-  function handleKey(e) {
-    if(!gameStarted) return;
-
-    let newRow = playerPos.row;
-    let newCol = playerPos.col;
-
-    switch(e.key.toLowerCase()) {
-      case 'w':
-      case 'arrowup':
-        newRow--;
-        break;
-      case 's':
-      case 'arrowdown':
-        newRow++;
-        break;
-      case 'a':
-      case 'arrowleft':
-        newCol--;
-        break;
-      case 'd':
-      case 'arrowright':
-        newCol++;
-        break;
-      default: return;
-    }
-
-    if(!isWall(newRow, newCol)) {
-      playerPos.row = newRow;
-      playerPos.col = newCol;
+function addEnemy() {
+  while(true) {
+    const r = Math.floor(Math.random() * ROWS);
+    const c = Math.floor(Math.random() * COLS);
+    if(!isWall(r,c) && !(r === playerPos.row && c === playerPos.col) && !enemies.some(e => e.row === r && e.col === c) && !superEnemies.some(e => e.row === r && e.col === c)) {
+      const enemy = document.createElement('img');
+      enemy.src = 'egg.png';
+      enemy.className = 'enemy';
+      game.appendChild(enemy);
+      enemies.push({
+        el: enemy,
+        row: r,
+        col: c,
+        visited: new Set([r + ',' + c])
+      });
       updatePositions();
-      checkItemPickup();
-      checkEnemyCollision();
+      break;
     }
   }
+}
 
-  function enemyNextMove(enemy) {
-    const directions = [
-      {r: -1, c: 0},
-      {r: 1, c: 0},
-      {r: 0, c: -1},
-      {r: 0, c: 1},
-    ];
-
-    const unvisitedMoves = directions.filter(d => {
-      const nr = enemy.row + d.r;
-      const nc = enemy.col + d.c;
-      if(nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) return false;
-      if(isWall(nr, nc)) return false;
-      if(enemy.visited.has(nr + ',' + nc)) return false;
-      return true;
-    });
-
-    if(unvisitedMoves.length === 0) {
-      enemy.visited.clear();
-      enemy.visited.add(enemy.row + ',' + enemy.col);
-      return enemyNextMove(enemy);
+function addSuperEnemy() {
+  while(true) {
+    const r = Math.floor(Math.random() * ROWS);
+    const c = Math.floor(Math.random() * COLS);
+    if(!isWall(r,c) && !(r === playerPos.row && c === playerPos.col) && !enemies.some(e => e.row === r && e.col === c) && !superEnemies.some(e => e.row === r && e.col === c)) {
+      const enemy = document.createElement('img');
+      enemy.src = 'egg2.png';
+      enemy.className = 'enemy2';
+      game.appendChild(enemy);
+      superEnemies.push({
+        el: enemy,
+        row: r,
+        col: c,
+        visited: new Set([r + ',' + c])
+      });
+      updatePositions();
+      break;
     }
-
-    const move = unvisitedMoves[Math.floor(Math.random() * unvisitedMoves.length)];
-    return {r: move.r, c: move.c};
   }
+}
 
-  function enemyMove() {
+function updatePositions() {
+  player.style.top = playerPos.row * CELL_SIZE + 'px';
+  player.style.left = playerPos.col * CELL_SIZE + 'px';
+
+  for(const enemy of enemies) {
+    enemy.el.style.top = enemy.row * CELL_SIZE + 'px';
+    enemy.el.style.left = enemy.col * CELL_SIZE + 'px';
+  }
+  for(const enemy of superEnemies) {
+    enemy.el.style.top = enemy.row * CELL_SIZE + 'px';
+    enemy.el.style.left = enemy.col * CELL_SIZE + 'px';
+  }
+  for(const item of items) {
+    item.el.style.top = item.row * CELL_SIZE + 'px';
+    item.el.style.left = item.col * CELL_SIZE + 'px';
+  }
+}
+
+function checkItemPickup() {
+  for(let i = items.length - 1; i >= 0; i--) {
+    if(items[i].row === playerPos.row && items[i].col === playerPos.col) {
+      const pickedItem = items[i];
+      game.removeChild(pickedItem.el);
+      const type = pickedItem.type;
+      items.splice(i, 1);
+      score++;
+      scoreDisplay.textContent = 'Score: ' + score;
+      placeItem(type);
+
+      showZkCapPopup(type);
+
+      if (!evilMode) {
+        if (score >= 5 && score <= 100 && score % 5 === 0) {
+          addEnemy();
+        }
+      } else {
+        if(score === 5 && superEnemies.length === 5) { for(let i=0;i<2;i++) addSuperEnemy(); }
+        if(score === 10 && superEnemies.length === 7) { for(let i=0;i<3;i++) addSuperEnemy(); }
+        if(score === 15 && superEnemies.length === 10) { for(let i=0;i<3;i++) addSuperEnemy(); }
+      }
+    }
+  }
+}
+
+function showZkCapPopup(type) {
+  const popup = document.createElement('div');
+  popup.className = 'zkcap-popup';
+  popup.textContent = '+1 zkCap';
+  if(type === 'hat1.png') {
+    popup.classList.add('hat1');
+  } else if(type === 'hat2.png') {
+    popup.classList.add('hat2');
+  }
+  const rect = game.getBoundingClientRect();
+  popup.style.left = (rect.left + playerPos.col * CELL_SIZE + CELL_SIZE/2) + "px";
+  popup.style.top = (rect.top + playerPos.row * CELL_SIZE) + "px";
+  document.body.appendChild(popup);
+  setTimeout(() => popup.remove(), 2000);
+}
+
+// === Проверка столкновения игрока с врагом на любом шаге ===
+function checkEnemyCollision(prevRow, prevCol, newRow, newCol) {
+  if (!evilMode) {
     for(const enemy of enemies) {
-      const move = enemyNextMove(enemy);
-      enemy.row += move.r;
-      enemy.col += move.c;
-      enemy.visited.add(enemy.row + ',' + enemy.col);
+      if(enemy.row === newRow && enemy.col === newCol) { gameOver(); return true; }
+      if ((enemy.row === prevRow && enemy.col === prevCol) || (enemy.row === newRow && enemy.col === newCol)) {
+        if ((prevRow !== newRow || prevCol !== newCol) && (enemy.row === newRow && enemy.col === newCol)) {
+          gameOver(); return true;
+        }
+      }
     }
-    updatePositions();
-    checkEnemyCollision();
+  } else {
+    for(const enemy of superEnemies) {
+      if(enemy.row === newRow && enemy.col === newCol) { gameOver(); return true; }
+      if ((enemy.row === prevRow && enemy.col === prevCol) || (enemy.row === newRow && enemy.col === newCol)) {
+        if ((prevRow !== newRow || prevCol !== newCol) && (enemy.row === newRow && enemy.col === newCol)) {
+          gameOver(); return true;
+        }
+      }
+    }
   }
+  return false;
+}
 
-  function initGame() {
-    score = 0;
-    scoreDisplay.textContent = 'Score: 0';
-    gameOverDisplay.style.display = 'none';
-    finalScoreDisplay.textContent = '';
+function gameOver() {
+  gameOverDisplay.style.display = 'block';
+  finalScoreDisplay.textContent = 'Score: ' + score;
+  document.removeEventListener('keydown', handleKey);
+  clearInterval(enemyMoveInterval);
+}
 
-    items.forEach(i => game.removeChild(i.el));
-    items = [];
-
-    if(window.player) {
-      game.removeChild(window.player);
-    }
-
-    createWalls();
-
-    playerPos = {row: 1, col: 1};
-    window.player = createPlayer();
-
-    for(let i=0; i<3; i++) {
-      placeItem('hat1.png');
-      placeItem('hat2.png');
-    }
-
-    createEnemies();
-
-    updatePositions();
-
-    if(enemyMoveInterval) clearInterval(enemyMoveInterval);
-    enemyMoveInterval = setInterval(enemyMove, 800);
-
-    document.addEventListener('keydown', handleKey);
+function handleKey(e) {
+  if(!gameStarted || moving) return;
+  let newRow = playerPos.row;
+  let newCol = playerPos.col;
+  switch(e.key.toLowerCase()) {
+    case 'w': case 'arrowup':    newRow--; break;
+    case 's': case 'arrowdown':  newRow++; break;
+    case 'a': case 'arrowleft':  newCol--; break;
+    case 'd': case 'arrowright': newCol++; break;
+    default: return;
   }
+  if(!isWall(newRow, newCol)) {
+    moving = true;
+    const prevRow = playerPos.row;
+    const prevCol = playerPos.col;
+    playerPos.row = newRow;
+    playerPos.col = newCol;
+    updatePositions();
+    setTimeout(() => {
+      checkItemPickup();
+      if (checkTrailCollision()) { moving = false; return; }
+      checkEnemyCollision(prevRow, prevCol, newRow, newCol);
+      moving = false;
+    }, 180);
+  }
+}
 
-  // Кнопка "To the game." запускает игру
-  toGameBtn.addEventListener('click', () => {
-    if(gameStarted) return;
-    gameStarted = true;
-    instructionOverlay.style.display = 'none';
-    initGame();
+function enemyNextMove(enemy) {
+  const directions = [
+    {r: -1, c: 0},
+    {r: 1, c: 0},
+    {r: 0, c: -1},
+    {r: 0, c: 1},
+  ];
+  const unvisitedMoves = directions.filter(d => {
+    const nr = enemy.row + d.r;
+    const nc = enemy.col + d.c;
+    if(nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) return false;
+    if(isWall(nr, nc)) return false;
+    if(enemy.visited.has(nr + ',' + nc)) return false;
+    return true;
   });
+  if(unvisitedMoves.length === 0) {
+    enemy.visited.clear();
+    enemy.visited.add(enemy.row + ',' + enemy.col);
+    return enemyNextMove(enemy);
+  }
+  const move = unvisitedMoves[Math.floor(Math.random() * unvisitedMoves.length)];
+  return {r: move.r, c: move.c};
+}
 
-  // Кнопка Restart
-  restartBtn.addEventListener('click', () => {
-    gameStarted = true;
-    initGame();
-  });
+function superEnemyNextMove(enemy) {
+  let move = enemyNextMove(enemy);
+  if (!move) return {r: 0, c: 0};
+  enemy.row += move.r;
+  enemy.col += move.c;
+  enemy.visited.add(enemy.row + ',' + enemy.col);
+  addEnemyTrail(enemy.row - move.r, enemy.col - move.c);
+  return move;
+}
 
-  // Сброс состояния при каждом открытии страницы
-  window.onload = () => {
-    gameStarted = false;
-    instructionOverlay.style.display = 'flex';
-    document.removeEventListener('keydown', handleKey);
-    if (enemyMoveInterval) clearInterval(enemyMoveInterval);
-  };
+function enemyMove() {
+  cleanupEnemyTrails();
+  for(const enemy of enemies) {
+    const prevRow = enemy.row;
+    const prevCol = enemy.col;
+    const move = enemyNextMove(enemy);
+    enemy.row += move.r;
+    enemy.col += move.c;
+    enemy.visited.add(enemy.row + ',' + enemy.col);
+    addEnemyTrail(prevRow, prevCol);
+  }
+  for(const enemy of superEnemies) {
+    const prevRow = enemy.row;
+    const prevCol = enemy.col;
+    superEnemyNextMove(enemy);
+    addEnemyTrail(prevRow, prevCol);
+  }
+  updatePositions();
+  checkTrailCollision();
+  if (!evilMode) {
+    for(const enemy of enemies) {
+      if(enemy.row === playerPos.row && enemy.col === playerPos.col) { gameOver(); return; }
+    }
+  } else {
+    for(const enemy of superEnemies) {
+      if(enemy.row === playerPos.row && enemy.col === playerPos.col) { gameOver(); return; }
+    }
+  }
+}
+
+function startGame() {
+  score = 0;
+  scoreDisplay.textContent = 'Score: 0';
+  scoreDisplay.style.display = 'block';
+  gameOverDisplay.style.display = 'none';
+  finalScoreDisplay.textContent = '';
+  [...game.querySelectorAll('.player, .enemy, .enemy2, .item1, .item2, .trail-cell')].forEach(e => e.remove());
+  items = [];
+  enemies = [];
+  superEnemies = [];
+  playerPos = {row: 1, col: 1};
+  player = createPlayer();
+  createWalls();
+  for(let i=0; i<3; i++) {
+    placeItem('hat1.png');
+    placeItem('hat2.png');
+  }
+  createEnemies();
+  updatePositions();
+  gameStarted = true;
+  document.addEventListener('keydown', handleKey);
+  if(enemyMoveInterval) clearInterval(enemyMoveInterval);
+  enemyMoveInterval = setInterval(enemyMove, evilMode ? 500 : 1000);
+  activeEnemyTrails = [];
+}
+
+frendlyBtn.addEventListener('click', function() {
+  evilMode = false;
+  instructionOverlay.style.display = 'none';
+  startGame();
+});
+evilBtn.addEventListener('click', function() {
+  evilMode = true;
+  instructionOverlay.style.display = 'none';
+  startGame();
+});
+restartBtn.addEventListener('click', function() {
+  instructionOverlay.style.display = 'flex';
+  gameOverDisplay.style.display = 'none';
+  scoreDisplay.style.display = 'none';
+  gameStarted = false;
+  document.removeEventListener('keydown', handleKey);
+  if (enemyMoveInterval) clearInterval(enemyMoveInterval);
+  activeEnemyTrails = [];
+});
 </script>
-
 </body>
 </html>
+

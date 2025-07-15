@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stack GPU Game</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: url('space.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #player {
+      position: absolute;
+      bottom: 20px;
+      width: 80px;
+      height: 80px;
+      background: url('ferris2.png') no-repeat center/contain;
+      z-index: 10;
+    }
+
+    .gpu {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      top: -80px;
+      z-index: 5;
+    }
+
+    .boost {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      top: -70px;
+      z-index: 7;
+    }
+
+    /* Плашка запуска */
+    #startOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #overlayBackground {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    #overlayContent {
+      position: relative;
+      z-index: 1;
+    }
+
+    .gpu-falling {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      opacity: 0.5;
+      background-size: contain;
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
+
+    #startOverlay h1 {
+      color: #a020f0;
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    #startOverlay p {
+      color: #ff69b4;
+      font-size: 18px;
+      margin: 4px 0;
+    }
+
+    #startOverlay button, #gameOverOverlay button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background: #d706d4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    #score {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+      z-index: 20;
+      color: #ff69b4;
+      font-weight: bold;
+    }
+
+    #lives {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 20;
+    }
+
+    .life {
+      width: 30px;
+      height: 30px;
+      margin-left: 5px;
+      opacity: 1;
+    }
+
+    #popup {
+      position: absolute;
+      color: #ff69b4;
+      z-index: 50;
+      font-weight: bold;
+      animation: rise 1.5s ease-out forwards;
+    }
+
+    @keyframes rise {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    .snow-flash {
+      animation: snowFlash 0.15s alternate infinite;
+    }
+
+    @keyframes snowFlash {
+      from { background-color: rgba(0, 170, 255, 0.25); }
+      to   { background-color: rgba(0, 255, 255, 0.4); }
+    }
+
+    #gameOverOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+    }
+
+    #gameOverOverlay h2 {
+      margin-bottom: 10px;
+    }
+
+    #finalScoreContainer {
+      margin-bottom: 16px;
+      font-size: 22px;
+      color: #ff69b4;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game">
+    <div id="player"></div>
+    <div id="score">Score: <span id="scoreValue">0</span></div>
+    <div id="lives">
+      <img src="life.png" class="life" id="life1">
+      <img src="life.png" class="life" id="life2">
+      <img src="life.png" class="life" id="life3">
+    </div>
+  </div>
+
+  <!-- Плашка запуска -->
+  <div id="startOverlay">
+    <div id="overlayBackground"></div>
+    <div id="overlayContent">
+      <h1>Stack GPU</h1>
+      <p>1. Use ← → keys to move</p>
+      <p>2. Catch GPUs and avoid dropping them</p>
+      <button id="startBtn">Start</button>
+    </div>
+  </div>
+
+  <!-- Плашка окончания -->
+  <div id="gameOverOverlay" style="display:none">
+    <h2>Game Over</h2>
+    <div id="finalScoreContainer">Your Score: <span id="finalScore">0</span></div>
+    <button id="restartBtn">Restart</button>
+  </div>
+
+<script>
+const gpuImages = ['blue.gpu.png','green.gpu.png','pink.gpu.png','orange.gpu.png','purple.gpu.png'];
+const game = document.getElementById('game');
+const player = document.getElementById('player');
+const scoreText = document.getElementById('scoreValue');
+const startOverlay = document.getElementById('startOverlay');
+const overlayBackground = document.getElementById('overlayBackground');
+const gameOverOverlay = document.getElementById('gameOverOverlay');
+const finalScore = document.getElementById('finalScore');
+const lifeElems = [document.getElementById('life1'), document.getElementById('life2'), document.getElementById('life3')];
+
+let score = 0;
+let lives = 3;
+let playerX = window.innerWidth / 2 - 40;
+let moveLeft = false, moveRight = false;
+let speed = 3;
+let spawnInterval;
+let gpus = [], boosts = [];
+let gameRunning = false;
+let snowActive = false;
+let lastSpeedStep = 0;
+
+function updateSpeedByScore(score) {
+  const step = Math.floor(score / 5);
+  if (step > lastSpeedStep && score <= 100) {
+    lastSpeedStep = step;
+    speed += 0.8;
+  }
+}
+
+// ✨ Фоновая анимация GPU на startOverlay
+function launchOverlayGpuFall() {
+  const interval = setInterval(() => {
+    if (startOverlay.style.display === 'none') {
+      overlayBackground.innerHTML = '';
+      clearInterval(interval);
+      return;
+    }
+
+    const gpu = document.createElement('div');
+    gpu.className = 'gpu-falling';
+    gpu.style.backgroundImage = `url(${gpuImages[Math.floor(Math.random() * gpuImages.length)]})`;
+    gpu.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+    gpu.y = -60;
+    gpu.style.top = gpu.y + 'px';
+
+    overlayBackground.appendChild(gpu);
+
+    function animate() {
+      if (!gpu.parentElement) return;
+      gpu.y += 1;
+      gpu.style.top = gpu.y + 'px';
+      if (gpu.y < window.innerHeight) {
+        requestAnimationFrame(animate);
+      } else {
+        gpu.remove();
+      }
+    }
+
+    animate();
+  }, 300);
+}
+
+function startGame() {
+  gameRunning = true;
+  score = 0;
+  speed = 2;
+  lives = 3;
+  lastSpeedStep = 0;
+  snowActive = false;
+
+  gpus.forEach(g => g.remove());
+  boosts.forEach(b => b.remove());
+  gpus = [];
+  boosts = [];
+
+  scoreText.textContent = score;
+  lifeElems.forEach(life => life.style.opacity = 1);
+  startOverlay.style.display = 'none';
+  gameOverOverlay.style.display = 'none';
+
+  const spawnRate = 900;
+  spawnInterval = setInterval(() => {
+    if (snowActive) return;
+    if (Math.random() < 0.95) spawnGpu();
+    if (Math.random() < 0.05) spawnFireBoost();
+    if (Math.random() < 0.03 && score >= 10) spawnSnowBoost();
+  }, spawnRate);
+
+  requestAnimationFrame(gameLoop);
+}
+
+function endGame() {
+  clearInterval(spawnInterval);
+  gameRunning = false;
+  finalScore.textContent = score;
+  gameOverOverlay.style.display = 'flex';
+}
+
+function spawnGpu() {
+  const gpu = document.createElement('div');
+  gpu.className = 'gpu';
+  gpu.style.backgroundImage = `url(${gpuImages[Math.floor(Math.random() * gpuImages.length)]})`;
+  gpu.x = Math.random() * (window.innerWidth - 70);
+  gpu.y = -70;
+  gpu.style.left = gpu.x + 'px';
+  gpu.style.top = gpu.y + 'px';
+  gpu.update = function () {
+    if (snowActive) return;
+    this.y += speed;
+    this.style.top = this.y + 'px';
+
+    if (this.y + 70 > window.innerHeight - 100 &&
+        this.x + 70 > playerX &&
+        this.x < playerX + 80) {
+      score++;
+      updateSpeedByScore(score);
+      scoreText.textContent = score;
+      this.remove();
+      gpus = gpus.filter(g => g !== this);
+    } else if (this.y > window.innerHeight) {
+      this.remove();
+      gpus = gpus.filter(g => g !== this);
+      loseLife();
+    }
+  };
+  gpus.push(gpu);
+  game.appendChild(gpu);
+}
+
+// Boosts...
+// (оставьте обычные spawnFireBoost и spawnSnowBoost без изменений)
+
+function loseLife() {
+  lives--;
+  if (lives >= 0) lifeElems[lives].style.opacity = 0.2;
+  if (lives <= 0) endGame();
+}
+
+function gameLoop() {
+  if (!gameRunning) return;
+  if (moveLeft) playerX -= 14;
+  if (moveRight) playerX += 14;
+  playerX = Math.max(0, Math.min(playerX, window.innerWidth - 80));
+  player.style.left = playerX + 'px';
+
+  gpus.forEach(g => g.update());
+  boosts.forEach(b => b.update());
+  requestAnimationFrame(gameLoop);
+}
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'a') moveLeft = true;
+  if (e.key === 'ArrowRight' || e.key === 'd') moveRight = true;
+});
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'a') moveLeft = false;
+  if (e.key === 'ArrowRight' || e.key === 'd') moveRight = false;
+});
+
+document.getElementById('startBtn').onclick = startGame;
+document.getElementById('restartBtn').onclick = () => {
+  startOverlay.style.display = 'flex';
+  gameOverOverlay.style.display = 'none';
+  launchOverlayGpuFall();
+};
+
+// ⏳ Запуск GPU дождя на фоне при старте
+window.onload = launchOverlayGpuFall;
+</script>
+</body>
+</html>

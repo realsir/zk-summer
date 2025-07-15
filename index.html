@@ -4,48 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>zkSummer</title>
-  <!-- Подключаем Titillium Web с Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap" rel="stylesheet" />
   <style>
     html, body {
       margin: 0; padding: 0; height: 100%; overflow: hidden;
       font-family: 'Titillium Web', Arial, sans-serif;
-    }
-
-    .background {
+      background-color: #ffe6f0;
       position: relative;
-      width: 100vw; height: 100vh;
-      background-image: url('zk1.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      overflow: hidden;
     }
 
-    /* 3D надпись сверху по середине */
-    .title-3d {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #ffc0cb;
-      font-size: 55px;
-      font-weight: bold;
-      text-align: center;
-      user-select: none;
-      z-index: 30;
-      text-shadow:
-        1px 1px 0 #d19fb3,
-        2px 2px 0 #a97e93,
-        3px 3px 0 #805c74,
-        4px 4px 5px rgba(0, 0, 0, 0.5);
-      font-family: 'Titillium Web', Arial, sans-serif;
-    }
-    .title-3d .succinct {
-      color: #d706d4;
-    }
-
-    /* Вертикальный контейнер бегущей строки с розовым фоном */
+    /* Бегущие строки */
     .vertical-marquee-container {
       position: fixed;
       top: 0;
@@ -57,7 +25,6 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      background-color: #ffb6c1;
       font-family: 'Titillium Web', Arial, sans-serif;
     }
     .vertical-marquee-container.left {
@@ -68,8 +35,6 @@
       right: 0;
       border-radius: 10px 0 0 10px;
     }
-
-    /* Контейнер с контентом для анимации */
     .vertical-marquee-content {
       display: flex;
       flex-direction: column;
@@ -84,7 +49,6 @@
     .vertical-marquee-container.right .vertical-marquee-content {
       animation-direction: reverse;
     }
-
     .vertical-marquee-content img {
       width: 60px;
       height: 60px;
@@ -92,82 +56,167 @@
       vertical-align: middle;
       display: inline-block;
     }
-
     @keyframes verticalScroll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+
+    /* Центрированная надпись сверху */
+    .main-title {
+      position: absolute;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      text-align: center;
+      z-index: 50;
+      font-family: 'Titillium Web', Arial, sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 1px;
+      user-select: none;
+      pointer-events: none;
+    }
+    .main-title .pink {
+      color: #ff69b4;
+    }
+    .main-title .purple {
+      color: #8B008B;
+      position: relative;
+      display: inline-block;
+      animation: blinkSuccinct 2s infinite alternate;
+    }
+    @keyframes blinkSuccinct {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    /* "proof" popup animation */
+    .proof-popup {
+      position: absolute;
+      color: #8B008B;
+      font-weight: 700;
+      font-size: 20px;
+      font-family: 'Titillium Web', Arial, sans-serif;
+      pointer-events: none;
+      user-select: none;
+      animation: floatUpFadeProof 2s forwards;
+      text-shadow: 0 0 5px #8B008B;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    @keyframes floatUpFadeProof {
       0% {
+        opacity: 1;
         transform: translateY(0);
       }
       100% {
-        transform: translateY(-50%);
+        opacity: 0;
+        transform: translateY(-50px);
       }
     }
 
-    /* Контейнер иконок с подписями (общий стиль) */
+    /* Иконки слева смещены правее на 40px (половина иконки 80px) */
+    .left-icons-container {
+      position: absolute;
+      top: 140px;
+      left: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      z-index: 20;
+      user-select: none;
+    }
+    .icon-row {
+      display: flex;
+      gap: 40px;
+    }
     .icon-wrapper {
-        position: absolute;
-        width: 62px;
-        text-align: center;
-        cursor: pointer;
-        z-index: 20;
-        user-select: none;
-        font-family: 'Titillium Web', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
+      cursor: pointer;
+      font-family: 'Titillium Web', Arial, sans-serif;
+      position: relative;
     }
-
     .icon-wrapper img.icon {
-        width: 62px;
-        height: 52px;
-        display: block;
-        margin: 0 auto;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background: transparent;
+      object-fit: contain;
+      border: 1.5px solid #8B008B;
+      box-shadow: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .icon-wrapper img.icon:hover {
+      border-color: #ff69b4;
+      box-shadow: 0 0 8px #ff69b4, 0 0 12px #8B008B;
+    }
+    .icon-label {
+      margin-top: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      color: #8B008B;
+      text-align: center;
+      user-select: none;
+      white-space: nowrap;
+    }
+    /* Прозрачность для pix и prover */
+    .pix-icon img.icon,
+    .prover-icon img.icon {
+      opacity: 0.5;
+      border-color: #8B008B80;
     }
 
-    .icon-wrapper .icon-label {
-        margin-top: 5px;
-        color: pink;
-        font-weight: bold;
-        font-size: 16px;
-        font-family: 'Titillium Web', Arial, sans-serif;
-    }
-
-    /* Отдельные позиции для каждой иконки */
-    .evil-zkegg-icon {
-        top: 120px;
-        left: 100px;
-    }
-
-    .dont-click-icon {
-        top: 250px;
-        left: 100px;
-    }
-
-    /* Иконка dev с курсором pointer */
+    /* dev icon и подпись справа снизу */
     .dev-icon {
       position: fixed;
-      bottom: 60px;
-      right: 120px;
-      width: 60px;
-      height: 60px;
+      bottom: 90px;
+      right: 80px;
+      width: 80px;
+      height: 80px;
       cursor: pointer;
-      z-index: 20;
       user-select: none;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.5);
-      display: block;
-      margin: 0 auto;
-      font-family: 'Titillium Web', Arial, sans-serif;
+      border-radius: 12px;
+      background: transparent;
+      border: 1.5px solid #8B008B;
+      box-shadow: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      object-fit: contain;
     }
-
+    .dev-icon:hover {
+      border-color: #ff69b4;
+      box-shadow: 0 0 8px #ff69b4, 0 0 12px #8B008B;
+    }
     .dev-label {
       position: fixed;
-      bottom: 20px;
-      right: 120px;
-      width: 60px;
+      bottom: 60px;
+      right: 80px;
+      width: 80px;
       text-align: center;
-      color: pink;
-      font-weight: bold;
-      font-size: 14px;
+      color: #8B008B;
+      font-weight: 700;
+      font-size: 16px;
       font-family: 'Titillium Web', Arial, sans-serif;
       user-select: none;
       z-index: 20;
+      white-space: nowrap;
+    }
+
+    .background {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('zk1.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     /* Модальные окна */
@@ -187,7 +236,6 @@
       padding: 0;
       font-family: 'Titillium Web', Arial, sans-serif;
     }
-
     .close-btn {
       position: absolute;
       top: 10px;
@@ -200,7 +248,6 @@
       z-index: 101;
       font-family: 'Titillium Web', Arial, sans-serif;
     }
-
     .overlay {
       display: none;
       position: fixed;
@@ -209,7 +256,6 @@
       background: rgba(0,0,0,0.5);
       z-index: 90;
     }
-
     .modal iframe {
       width: 100%;
       height: 100%;
@@ -220,65 +266,78 @@
   </style>
 </head>
 <body>
-  <div class="background">
-
-    <!-- 3D надпись сверху по середине с выделенным словом Succinct -->
-    <div class="title-3d">zkSummer with <span class="succinct">Succinct</span></div>
-
-    <!-- Левая вертикальная бегущая строка с розовым фоном -->
-    <div class="vertical-marquee-container left" aria-hidden="true">
-      <div class="vertical-marquee-content" aria-hidden="true" id="leftMarquee">
-        <!-- Картинки будут вставлены через JS -->
-      </div>
-    </div>
-
-    <!-- Правая вертикальная бегущая строка с розовым фоном -->
-    <div class="vertical-marquee-container right" aria-hidden="true">
-      <div class="vertical-marquee-content" aria-hidden="true" id="rightMarquee">
-        <!-- Картинки будут вставлены через JS -->
-      </div>
-    </div>
-
-    <!-- Иконка Evil zkEgg -->
-    <div class="icon-wrapper evil-zkegg-icon" id="openEvilZkEgg">
-      <img src="egg.png" alt="Иконка игры" class="icon" title="Открыть игру" />
-      <div class="icon-label">Evil zkEgg</div>
-    </div>
-
-    <!-- НОВАЯ Иконка DON'T CLICK! -->
-    <div class="icon-wrapper dont-click-icon" id="openDontClick">
-      <img src="krest.png" alt="Не нажимать" class="icon" title="Не нажимать!" />
-      <div class="icon-label">DON'T CLICK!</div>
-    </div>
-
+  <!-- Бегущие строки по бокам -->
+  <div class="vertical-marquee-container left" aria-hidden="true">
+    <div class="vertical-marquee-content" aria-hidden="true" id="leftMarquee"></div>
+  </div>
+  <div class="vertical-marquee-container right" aria-hidden="true">
+    <div class="vertical-marquee-content" aria-hidden="true" id="rightMarquee"></div>
   </div>
 
-  <!-- Иконка разработчика в правом нижнем углу, кликабельная -->
+  <!-- Центральная надпись -->
+  <div class="main-title">
+    <span class="pink">zkSummer with</span> <span class="purple" id="succinct">Succinct</span>
+  </div>
+
+  <div class="background">
+    <div class="left-icons-container">
+      <div class="icon-row">
+        <div class="icon-wrapper evil-zkegg-icon" id="openEvilZkEgg">
+          <img src="egg.png" alt="Иконка игры" class="icon" title="Открыть игру" />
+          <div class="icon-label">Evil zkEgg</div>
+        </div>
+        <div class="icon-wrapper stack-gpu-icon" id="openStackGpu">
+          <img src="stack-gpu.png" alt="Stack GPU" class="icon" title="Открыть Stack GPU" />
+          <div class="icon-label">Stack GPU</div>
+        </div>
+        <div class="icon-wrapper pix-icon" id="openPixGame">
+          <img src="pix.png" alt="zkFrens (pix-game)" class="icon" title="Открыть zkFrens (pix-game)" />
+          <div class="icon-label">zkFrens (pix-game)</div>
+        </div>
+      </div>
+      <div class="icon-wrapper dont-click-icon" id="openDontClick" style="margin-top: 40px;">
+        <img src="krest.png" alt="Не нажимать" class="icon" title="Не нажимать!" />
+        <div class="icon-label">DON'T CLICK!</div>
+      </div>
+      <div class="icon-wrapper prover-icon" id="openProver" style="margin-top: 20px;">
+        <img src="prover.png" alt="Prover???" class="icon" title="Открыть Prover???" />
+        <div class="icon-label">Prover?</div>
+      </div>
+    </div>
+  </div>
+
   <img src="dev.png" alt="Developer" class="dev-icon" id="devIcon" />
   <div class="dev-label">realsir (dev)</div>
 
-  <!-- Затемнение -->
   <div class="overlay" id="overlay"></div>
 
-  <!-- Модальные окна -->
   <div class="modal" id="modalEvilZkEgg">
     <div class="close-btn" id="closeEvilZkEgg">&times;</div>
     <iframe src="" title="Игра Evil zkEgg" id="iframeEvilZkEgg"></iframe>
   </div>
-
+  <div class="modal" id="modalStackGpu">
+    <div class="close-btn" id="closeStackGpu">&times;</div>
+    <iframe src="" title="Stack GPU" id="iframeStackGpu"></iframe>
+  </div>
+  <div class="modal" id="modalPixGame">
+    <div class="close-btn" id="closePixGame">&times;</div>
+    <iframe src="" title="zkFrens (pix-game)" id="iframePixGame"></iframe>
+  </div>
   <div class="modal" id="modalDev">
     <div class="close-btn" id="closeDev">&times;</div>
     <iframe src="" title="Dev page" id="iframeDev"></iframe>
   </div>
-
-  <!-- НОВОЕ Модальное окно для DON'T CLICK! -->
   <div class="modal" id="modalDontClick">
     <div class="close-btn" id="closeDontClick">&times;</div>
     <iframe src="" title="Don't Click Page" id="iframeDontClick"></iframe>
   </div>
+  <div class="modal" id="modalProver">
+    <div class="close-btn" id="closeProver">&times;</div>
+    <iframe src="" title="Prover???" id="iframeProver"></iframe>
+  </div>
 
   <script>
-    // Массив с путями к картинкам
+    // Массив с путями к картинкам для бегущих строк
     const images = [
       'purple.gpu.png',
       'orange.gpu.png',
@@ -286,12 +345,9 @@
       'blue.gpu.png',
       'pink.gpu.png'
     ];
-
-    // Функция для создания длинной последовательности картинок
     function createImageSequence(containerId) {
       const container = document.getElementById(containerId);
-      const repeatCount = 20; // сколько раз повторять последовательность
-
+      const repeatCount = 20;
       for (let i = 0; i < repeatCount; i++) {
         for (const src of images) {
           const img = document.createElement('img');
@@ -301,83 +357,82 @@
         }
       }
     }
-
     createImageSequence('leftMarquee');
     createImageSequence('rightMarquee');
 
-    // Существующий код для модальных окон и иконок
-    const overlay = document.getElementById('overlay');
-
-    // Элементы Evil zkEgg
-    const openEvilZkEggBtn = document.getElementById('openEvilZkEgg');
-    const modalEvilZkEgg = document.getElementById('modalEvilZkEgg');
-    const closeEvilZkEggBtn = document.getElementById('closeEvilZkEgg');
-    const iframeEvilZkEgg = document.getElementById('iframeEvilZkEgg');
-
-    // Элементы dev
-    const openDevBtn = document.getElementById('devIcon');
-    const modalDev = document.getElementById('modalDev');
-    const closeDevBtn = document.getElementById('closeDev');
-    const iframeDev = document.getElementById('iframeDev');
-
-    // НОВЫЕ Элементы DON'T CLICK!
-    const openDontClickBtn = document.getElementById('openDontClick');
-    const modalDontClick = document.getElementById('modalDontClick');
-    const closeDontClickBtn = document.getElementById('closeDontClick');
-    const iframeDontClick = document.getElementById('iframeDontClick');
-
-    // Функция открытия модального окна с загрузкой iframe
+    // Создаем функцию открытия модального окна с загрузкой iframe
     function openModal(modal, iframe, src) {
-      // Скрываем ВСЕ модальные окна и очищаем ВСЕ iframe src
-      modalEvilZkEgg.style.display = 'none';
-      iframeEvilZkEgg.src = '';
-      modalDev.style.display = 'none';
-      iframeDev.src = '';
-      modalDontClick.style.display = 'none';
-      iframeDontClick.src = '';
+      // Скрываем все модальные окна и очищаем iframe src
+      const modals = document.querySelectorAll('.modal');
+      const iframes = document.querySelectorAll('.modal iframe');
+      modals.forEach(m => m.style.display = 'none');
+      iframes.forEach(f => f.src = '');
 
       // Открываем нужное окно и загружаем src
       iframe.src = src;
       modal.style.display = 'block';
-      overlay.style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
     }
 
     // Функция закрытия модального окна
     function closeModal(modal, iframe) {
       modal.style.display = 'none';
       iframe.src = '';
-      overlay.style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
     }
 
-    openEvilZkEggBtn.addEventListener('click', () => {
-      openModal(modalEvilZkEgg, iframeEvilZkEgg, 'ferris2.0.html');
-    });
+    // Получаем элементы
+    const overlay = document.getElementById('overlay');
 
-    closeEvilZkEggBtn.addEventListener('click', () => {
-      closeModal(modalEvilZkEgg, iframeEvilZkEgg);
-    });
+    const modalEvilZkEgg = document.getElementById('modalEvilZkEgg');
+    const iframeEvilZkEgg = modalEvilZkEgg.querySelector('iframe');
+    const btnEvilZkEgg = document.getElementById('openEvilZkEgg');
 
-    openDevBtn.addEventListener('click', () => {
-      openModal(modalDev, iframeDev, 'dev.html');
-    });
+    const modalStackGpu = document.getElementById('modalStackGpu');
+    const iframeStackGpu = modalStackGpu.querySelector('iframe');
+    const btnStackGpu = document.getElementById('openStackGpu');
 
-    closeDevBtn.addEventListener('click', () => {
-      closeModal(modalDev, iframeDev);
-    });
+    const modalPixGame = document.getElementById('modalPixGame');
+    const iframePixGame = modalPixGame.querySelector('iframe');
+    const btnPixGame = document.getElementById('openPixGame');
 
-    openDontClickBtn.addEventListener('click', () => {
-      openModal(modalDontClick, iframeDontClick, 'dontclick.html');
-    });
+    const modalDontClick = document.getElementById('modalDontClick');
+    const iframeDontClick = modalDontClick.querySelector('iframe');
+    const btnDontClick = document.getElementById('openDontClick');
 
-    closeDontClickBtn.addEventListener('click', () => {
-      closeModal(modalDontClick, iframeDontClick);
-    });
+    const modalProver = document.getElementById('modalProver');
+    const iframeProver = modalProver.querySelector('iframe');
+    const btnProver = document.getElementById('openProver');
 
+    const modalDev = document.getElementById('modalDev');
+    const iframeDev = modalDev.querySelector('iframe');
+    const btnDev = document.getElementById('devIcon');
+
+    // Навешиваем обработчики открытия
+    btnEvilZkEgg.addEventListener('click', () => openModal(modalEvilZkEgg, iframeEvilZkEgg, 'ferris2.0.html'));
+    btnStackGpu.addEventListener('click', () => openModal(modalStackGpu, iframeStackGpu, 'gpu.html'));
+    btnPixGame.addEventListener('click', () => openModal(modalPixGame, iframePixGame, 'pix-game.html'));
+    btnDontClick.addEventListener('click', () => openModal(modalDontClick, iframeDontClick, 'dontclick.html'));
+    btnProver.addEventListener('click', () => openModal(modalProver, iframeProver, 'prover.html'));
+    btnDev.addEventListener('click', () => openModal(modalDev, iframeDev, 'dev.html'));
+
+    // Навешиваем обработчики закрытия
+    document.getElementById('closeEvilZkEgg').addEventListener('click', () => closeModal(modalEvilZkEgg, iframeEvilZkEgg));
+    document.getElementById('closeStackGpu').addEventListener('click', () => closeModal(modalStackGpu, iframeStackGpu));
+    document.getElementById('closePixGame').addEventListener('click', () => closeModal(modalPixGame, iframePixGame));
+    document.getElementById('closeDontClick').addEventListener('click', () => closeModal(modalDontClick, iframeDontClick));
+    document.getElementById('closeProver').addEventListener('click', () => closeModal(modalProver, iframeProver));
+    document.getElementById('closeDev').addEventListener('click', () => closeModal(modalDev, iframeDev));
+
+    // Закрытие по клику на оверлей
     overlay.addEventListener('click', () => {
-      closeModal(modalEvilZkEgg, iframeEvilZkEgg);
-      closeModal(modalDev, iframeDev);
-      closeModal(modalDontClick, iframeDontClick);
+      const modals = document.querySelectorAll('.modal');
+      const iframes = document.querySelectorAll('.modal iframe');
+      modals.forEach(m => m.style.display = 'none');
+      iframes.forEach(f => f.src = '');
+      overlay.style.display = 'none';
     });
   </script>
 </body>
 </html>
+

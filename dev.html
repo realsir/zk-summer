@@ -11,9 +11,9 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden; /* Убираем скролл */
-      background-color: #ffe6f0; /* Нежно-розовый фон всей страницы */
-      position: relative; /* Для позиционирования marquee */
+      overflow: hidden;
+      background-color: #ffe6f0;
+      position: relative;
       font-family: 'Titillium Web', Arial, sans-serif;
     }
 
@@ -24,78 +24,73 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      z-index: 1; /* Чтобы был за основным контентом */
+      z-index: 1;
     }
 
     .marquee-row {
       white-space: nowrap;
-      will-change: transform; /* Оптимизация производительности анимации */
-      font-size: 2em; /* Размер текста бегущей строки */
+      will-change: transform;
+      font-size: 2em;
       font-weight: bold;
-      color: rgba(255, 105, 180, 0.3); /* Полупрозрачный темно-розовый */
+      color: rgba(255, 105, 180, 0.3);
       line-height: 1.5;
-      padding: 0; /* Убираем отступы */
+      padding: 0;
       font-family: 'Titillium Web', Arial, sans-serif;
     }
 
-    /* Анимация для бегущей строки (вправо) */
     @keyframes marqueeRight {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(0%); }
     }
-    /* Анимация для бегущей строки (влево) */
     @keyframes marqueeLeft {
       0% { transform: translateX(0%); }
       100% { transform: translateX(-100%); }
     }
-
-    /* Чтобы строки двигались в противоположных направлениях */
     .marquee-row:nth-child(even) {
-      animation: marqueeRight 60s linear infinite; /* Четные строки вправо */
+      animation: marqueeRight 60s linear infinite;
     }
     .marquee-row:nth-child(odd) {
-      animation: marqueeLeft 60s linear infinite; /* Нечетные строки влево */
+      animation: marqueeLeft 60s linear infinite;
     }
 
     .info-window {
-      position: relative; /* Для z-index */
-      z-index: 10; /* Чтобы был поверх бегущей строки */
-      background-color: #ffb6c1; /* Более насыщенный нежно-розовый для плашки */
+      position: relative;
+      z-index: 10;
+      background-color: #ffb6c1;
       padding: 30px 40px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(255, 182, 193, 0.8);
       font-size: 20px;
-      color: #8B008B; /* Темно-розовый/пурпурный для текста */
-      max-width: 400px;
+      color: #8B008B;
+      max-width: 480px;
       text-align: center;
       line-height: 1.5;
-      margin: auto; /* Центрирование плашки */
+      margin: auto;
       top: 50%;
       transform: translateY(-50%);
-      position: relative; /* Для z-index и центрирования */
       font-family: 'Titillium Web', Arial, sans-serif;
     }
     .info-window a {
-      color: #d706d4; /* Яркий темно-розовый для ссылки */
+      color: #d706d4;
       text-decoration: none;
       font-weight: bold;
       font-family: 'Titillium Web', Arial, sans-serif;
+      transition: color 0.18s;
     }
     .info-window a:hover,
     .info-window a:focus {
       text-decoration: underline;
+      color: #a020f0;
     }
   </style>
 </head>
 <body>
   <div class="marquee-background-container">
-    <!-- Генерируем 20 строк бегущей строки с исходным текстом -->
     <script>
       const marqueeContainer = document.querySelector('.marquee-background-container');
       const word = "IM PROVER ";
-      const numWordsPerLine = 30; // Примерное количество повторений слова для заполнения строки
+      const numWordsPerLine = 30;
       const numLines = 20;
-
       for (let i = 0; i < numLines; i++) {
         let lineContent = "";
         for(let j = 0; j < numWordsPerLine; j++) {
@@ -106,12 +101,16 @@
         div.textContent = lineContent;
         marqueeContainer.appendChild(div);
       }
-    </script>
+    </script> 
   </div>
 
   <div class="info-window">
-    gprove, im <a href="https://x.com/realsirandrew" target="_blank" rel="noopener noreferrer">realsir</a> prover.
+    gprove, im
+    <a href="https://x.com/realsirandrew" target="_blank" rel="noopener noreferrer">realsir</a>&nbsp;&amp; proof my
+    <a href="https://x.com/realsirandrew/status/1945097403650203713" target="_blank" rel="noopener noreferrer">200 proofs</a>
+    (post) for Succinct.
   </div>
 </body>
 </html>
+
 
