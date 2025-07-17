@@ -7,13 +7,15 @@
   <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,600,700&display=swap" rel="stylesheet" />
   <style>
     html, body {
-      margin: 0; padding: 0; height: 100%; overflow: hidden;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
       font-family: 'Titillium Web', Arial, sans-serif;
       background-color: #ffe6f0;
       position: relative;
     }
 
-    /* Бегущие строки */
     .vertical-marquee-container {
       position: fixed;
       top: 0;
@@ -25,43 +27,42 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      font-family: 'Titillium Web', Arial, sans-serif;
     }
+
     .vertical-marquee-container.left {
       left: 0;
       border-radius: 0 10px 10px 0;
     }
+
     .vertical-marquee-container.right {
       right: 0;
       border-radius: 10px 0 0 10px;
     }
+
     .vertical-marquee-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: black;
       font-size: 0;
       line-height: 2.5em;
       animation: verticalScroll 40s linear infinite;
-      user-select: none;
-      font-family: 'Titillium Web', Arial, sans-serif;
     }
+
     .vertical-marquee-container.right .vertical-marquee-content {
       animation-direction: reverse;
     }
+
     .vertical-marquee-content img {
       width: 60px;
       height: 60px;
       margin: 0 2px;
-      vertical-align: middle;
-      display: inline-block;
     }
+
     @keyframes verticalScroll {
       0% { transform: translateY(0); }
       100% { transform: translateY(-50%); }
     }
 
-    /* Центрированная надпись сверху */
     .main-title {
       position: absolute;
       top: 32px;
@@ -70,7 +71,6 @@
       width: 100%;
       text-align: center;
       z-index: 50;
-      font-family: 'Titillium Web', Arial, sans-serif;
       font-size: 48px;
       font-weight: 700;
       line-height: 1.1;
@@ -78,46 +78,37 @@
       user-select: none;
       pointer-events: none;
     }
-    .main-title .pink {
-      color: #ff69b4;
-    }
+
+    .main-title .pink { color: #ff69b4; }
+
     .main-title .purple {
       color: #8B008B;
-      position: relative;
-      display: inline-block;
       animation: blinkSuccinct 2s infinite alternate;
     }
+
     @keyframes blinkSuccinct {
       0% { opacity: 0.4; }
       100% { opacity: 1; }
     }
 
-    /* "proof" popup animation */
     .proof-popup {
       position: absolute;
       color: #8B008B;
       font-weight: 700;
       font-size: 20px;
-      font-family: 'Titillium Web', Arial, sans-serif;
-      pointer-events: none;
-      user-select: none;
       animation: floatUpFadeProof 2s forwards;
       text-shadow: 0 0 5px #8B008B;
       z-index: 100;
       white-space: nowrap;
-    }
-    @keyframes floatUpFadeProof {
-      0% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-50px);
-      }
+      pointer-events: none;
+      user-select: none;
     }
 
-    /* Иконки слева смещены правее на 40px (половина иконки 80px) */
+    @keyframes floatUpFadeProof {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-50px); }
+    }
+
     .left-icons-container {
       position: absolute;
       top: 140px;
@@ -128,33 +119,34 @@
       z-index: 20;
       user-select: none;
     }
+
     .icon-row {
       display: flex;
       gap: 40px;
     }
+
     .icon-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 80px;
       cursor: pointer;
-      font-family: 'Titillium Web', Arial, sans-serif;
-      position: relative;
     }
+
     .icon-wrapper img.icon {
       width: 80px;
       height: 80px;
       border-radius: 12px;
-      background: transparent;
-      object-fit: contain;
       border: 1.5px solid #8B008B;
-      box-shadow: none;
+      object-fit: contain;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
+
     .icon-wrapper img.icon:hover {
       border-color: #ff69b4;
       box-shadow: 0 0 8px #ff69b4, 0 0 12px #8B008B;
     }
+
     .icon-label {
       margin-top: 8px;
       font-weight: 600;
@@ -164,46 +156,11 @@
       user-select: none;
       white-space: nowrap;
     }
-    /* Прозрачность для pix и prover */
+
     .pix-icon img.icon,
     .prover-icon img.icon {
       opacity: 0.5;
       border-color: #8B008B80;
-    }
-
-    /* dev icon и подпись справа снизу */
-    .dev-icon {
-      position: fixed;
-      bottom: 90px;
-      right: 80px;
-      width: 80px;
-      height: 80px;
-      cursor: pointer;
-      user-select: none;
-      border-radius: 12px;
-      background: transparent;
-      border: 1.5px solid #8B008B;
-      box-shadow: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      object-fit: contain;
-    }
-    .dev-icon:hover {
-      border-color: #ff69b4;
-      box-shadow: 0 0 8px #ff69b4, 0 0 12px #8B008B;
-    }
-    .dev-label {
-      position: fixed;
-      bottom: 60px;
-      right: 80px;
-      width: 80px;
-      text-align: center;
-      color: #8B008B;
-      font-weight: 700;
-      font-size: 16px;
-      font-family: 'Titillium Web', Arial, sans-serif;
-      user-select: none;
-      z-index: 20;
-      white-space: nowrap;
     }
 
     .background {
@@ -214,12 +171,37 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      overflow: hidden;
-      padding: 0;
-      box-sizing: border-box;
     }
 
-    /* Модальные окна */
+    .dev-icon {
+      position: fixed;
+      bottom: 90px;
+      right: 80px;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      border: 1.5px solid #8B008B;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .dev-icon:hover {
+      border-color: #ff69b4;
+      box-shadow: 0 0 8px #ff69b4, 0 0 12px #8B008B;
+    }
+
+    .dev-label {
+      position: fixed;
+      bottom: 40px;
+      right: 80px;
+      width: 80px;
+      text-align: center;
+      color: #8B008B;
+      font-weight: 700;
+      font-size: 16px;
+      z-index: 20;
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -233,9 +215,15 @@
       border-radius: 8px;
       z-index: 100;
       overflow: hidden;
-      padding: 0;
-      font-family: 'Titillium Web', Arial, sans-serif;
     }
+
+    .modal iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 8px;
+    }
+
     .close-btn {
       position: absolute;
       top: 10px;
@@ -246,191 +234,155 @@
       cursor: pointer;
       user-select: none;
       z-index: 101;
-      font-family: 'Titillium Web', Arial, sans-serif;
     }
+
     .overlay {
       display: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: rgba(0,0,0,0.5);
       z-index: 90;
     }
-    .modal iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 8px;
-      display: block;
+
+    /* Community icon (styled like others, positioned over dev-icon) */
+    #openCommunity {
+      position: fixed;
+      bottom: 190px;
+      right: 80px;
+      z-index: 21;
     }
   </style>
 </head>
 <body>
-  <!-- Бегущие строки по бокам -->
-  <div class="vertical-marquee-container left" aria-hidden="true">
-    <div class="vertical-marquee-content" aria-hidden="true" id="leftMarquee"></div>
+  <!-- Бегущие строки -->
+  <div class="vertical-marquee-container left">
+    <div class="vertical-marquee-content" id="leftMarquee"></div>
   </div>
-  <div class="vertical-marquee-container right" aria-hidden="true">
-    <div class="vertical-marquee-content" aria-hidden="true" id="rightMarquee"></div>
+  <div class="vertical-marquee-container right">
+    <div class="vertical-marquee-content" id="rightMarquee"></div>
   </div>
 
-  <!-- Центральная надпись -->
+  <!-- Заголовок -->
   <div class="main-title">
-    <span class="pink">zkSummer with</span> <span class="purple" id="succinct">Succinct</span>
+    <span class="pink">zkSummer with</span> <span class="purple">Succinct</span>
   </div>
 
+  <!-- Иконки -->
   <div class="background">
     <div class="left-icons-container">
       <div class="icon-row">
-        <div class="icon-wrapper evil-zkegg-icon" id="openEvilZkEgg">
-          <img src="egg.png" alt="Иконка игры" class="icon" title="Открыть игру" />
+        <div class="icon-wrapper" id="openEvilZkEgg">
+          <img src="egg.png" class="icon" alt="Evil zkEgg" />
           <div class="icon-label">Evil zkEgg</div>
         </div>
-        <div class="icon-wrapper stack-gpu-icon" id="openStackGpu">
-          <img src="stack-gpu.png" alt="Stack GPU" class="icon" title="Открыть Stack GPU" />
+        <div class="icon-wrapper" id="openStackGpu">
+          <img src="stack-gpu.png" class="icon" alt="Stack GPU" />
           <div class="icon-label">Stack GPU</div>
         </div>
         <div class="icon-wrapper pix-icon" id="openPixGame">
-          <img src="pix.png" alt="zkFrens (pix-game)" class="icon" title="Открыть zkFrens (pix-game)" />
+          <img src="pix.png" class="icon" alt="zkFrens" />
           <div class="icon-label">zkFrens (pix-game)</div>
         </div>
       </div>
-      <div class="icon-wrapper dont-click-icon" id="openDontClick" style="margin-top: 40px;">
-        <img src="krest.png" alt="Не нажимать" class="icon" title="Не нажимать!" />
+      <div class="icon-wrapper" id="openDontClick" style="margin-top: 40px;">
+        <img src="krest.png" class="icon" alt="Don't Click!" />
         <div class="icon-label">DON'T CLICK!</div>
       </div>
       <div class="icon-wrapper prover-icon" id="openProver" style="margin-top: 20px;">
-        <img src="prover.png" alt="Prover???" class="icon" title="Открыть Prover???" />
+        <img src="prover.png" class="icon" alt="Prover" />
         <div class="icon-label">Prover?</div>
       </div>
     </div>
   </div>
 
-  <img src="dev.png" alt="Developer" class="dev-icon" id="devIcon" />
+  <div class="icon-wrapper" id="openCommunity">
+    <img src="community.png" class="icon" alt="Community" />
+    <div class="icon-label">Community <br> (zkWebsite)</div>
+  </div>
+
+  <img src="dev.png" class="dev-icon" id="devIcon" />
   <div class="dev-label">realsir (dev)</div>
 
+  <!-- Модальные окна -->
   <div class="overlay" id="overlay"></div>
 
-  <div class="modal" id="modalEvilZkEgg">
-    <div class="close-btn" id="closeEvilZkEgg">&times;</div>
-    <iframe src="" title="Игра Evil zkEgg" id="iframeEvilZkEgg"></iframe>
-  </div>
-  <div class="modal" id="modalStackGpu">
-    <div class="close-btn" id="closeStackGpu">&times;</div>
-    <iframe src="" title="Stack GPU" id="iframeStackGpu"></iframe>
-  </div>
-  <div class="modal" id="modalPixGame">
-    <div class="close-btn" id="closePixGame">&times;</div>
-    <iframe src="" title="zkFrens (pix-game)" id="iframePixGame"></iframe>
-  </div>
-  <div class="modal" id="modalDev">
-    <div class="close-btn" id="closeDev">&times;</div>
-    <iframe src="" title="Dev page" id="iframeDev"></iframe>
-  </div>
-  <div class="modal" id="modalDontClick">
-    <div class="close-btn" id="closeDontClick">&times;</div>
-    <iframe src="" title="Don't Click Page" id="iframeDontClick"></iframe>
-  </div>
-  <div class="modal" id="modalProver">
-    <div class="close-btn" id="closeProver">&times;</div>
-    <iframe src="" title="Prover???" id="iframeProver"></iframe>
-  </div>
+  <div class="modal" id="modalEvilZkEgg"><div class="close-btn" id="closeEvilZkEgg">&times;</div><iframe id="iframeEvilZkEgg"></iframe></div>
+  <div class="modal" id="modalStackGpu"><div class="close-btn" id="closeStackGpu">&times;</div><iframe id="iframeStackGpu"></iframe></div>
+  <div class="modal" id="modalPixGame"><div class="close-btn" id="closePixGame">&times;</div><iframe id="iframePixGame"></iframe></div>
+  <div class="modal" id="modalDontClick"><div class="close-btn" id="closeDontClick">&times;</div><iframe id="iframeDontClick"></iframe></div>
+  <div class="modal" id="modalProver"><div class="close-btn" id="closeProver">&times;</div><iframe id="iframeProver"></iframe></div>
+  <div class="modal" id="modalDev"><div class="close-btn" id="closeDev">&times;</div><iframe id="iframeDev"></iframe></div>
+  <div class="modal" id="modalCommunity"><div class="close-btn" id="closeCommunity">&times;</div><iframe id="iframeCommunity"></iframe></div>
 
   <script>
-    // Массив с путями к картинкам для бегущих строк
     const images = [
-      'purple.gpu.png',
-      'orange.gpu.png',
-      'green.gpu.png',
-      'blue.gpu.png',
-      'pink.gpu.png'
+      'purple.gpu.png', 'orange.gpu.png', 'green.gpu.png', 'blue.gpu.png', 'pink.gpu.png'
     ];
-    function createImageSequence(containerId) {
-      const container = document.getElementById(containerId);
-      const repeatCount = 20;
-      for (let i = 0; i < repeatCount; i++) {
-        for (const src of images) {
+
+    function createImageSequence(id) {
+      const el = document.getElementById(id);
+      for (let i = 0; i < 20; i++) {
+        images.forEach(src => {
           const img = document.createElement('img');
           img.src = src;
-          img.alt = 'gpu icon';
-          container.appendChild(img);
-        }
+          el.appendChild(img);
+        });
       }
     }
     createImageSequence('leftMarquee');
     createImageSequence('rightMarquee');
 
-    // Создаем функцию открытия модального окна с загрузкой iframe
     function openModal(modal, iframe, src) {
-      // Скрываем все модальные окна и очищаем iframe src
-      const modals = document.querySelectorAll('.modal');
-      const iframes = document.querySelectorAll('.modal iframe');
-      modals.forEach(m => m.style.display = 'none');
-      iframes.forEach(f => f.src = '');
-
-      // Открываем нужное окно и загружаем src
+      document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+      document.querySelectorAll('iframe').forEach(f => f.src = '');
       iframe.src = src;
       modal.style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     }
 
-    // Функция закрытия модального окна
     function closeModal(modal, iframe) {
       modal.style.display = 'none';
       iframe.src = '';
       document.getElementById('overlay').style.display = 'none';
     }
 
-    // Получаем элементы
-    const overlay = document.getElementById('overlay');
+    const modals = {
+      openEvilZkEgg: ['modalEvilZkEgg', 'iframeEvilZkEgg', 'ferris2.0.html'],
+      openStackGpu: ['modalStackGpu', 'iframeStackGpu', 'gpu.html'],
+      openPixGame: ['modalPixGame', 'iframePixGame', 'pix-game.html'],
+      openDontClick: ['modalDontClick', 'iframeDontClick', 'dontclick.html'],
+      openProver: ['modalProver', 'iframeProver', 'prover.html'],
+      devIcon: ['modalDev', 'iframeDev', 'dev.html'],
+      openCommunity: ['modalCommunity', 'iframeCommunity', 'community.html']
+    };
 
-    const modalEvilZkEgg = document.getElementById('modalEvilZkEgg');
-    const iframeEvilZkEgg = modalEvilZkEgg.querySelector('iframe');
-    const btnEvilZkEgg = document.getElementById('openEvilZkEgg');
+    for (const btnId in modals) {
+      const [modalId, iframeId, src] = modals[btnId];
+      document.getElementById(btnId).addEventListener('click', () =>
+        openModal(document.getElementById(modalId), document.getElementById(iframeId), src)
+      );
+    }
 
-    const modalStackGpu = document.getElementById('modalStackGpu');
-    const iframeStackGpu = modalStackGpu.querySelector('iframe');
-    const btnStackGpu = document.getElementById('openStackGpu');
+    const closeButtons = [
+      'closeEvilZkEgg', 'closeStackGpu', 'closePixGame',
+      'closeDontClick', 'closeProver', 'closeDev', 'closeCommunity'
+    ];
 
-    const modalPixGame = document.getElementById('modalPixGame');
-    const iframePixGame = modalPixGame.querySelector('iframe');
-    const btnPixGame = document.getElementById('openPixGame');
+    closeButtons.forEach(closeId => {
+      const modalId = closeId.replace('close', 'modal');
+      const iframeId = closeId.replace('close', 'iframe');
+      document.getElementById(closeId).addEventListener('click', () =>
+        closeModal(document.getElementById(modalId), document.getElementById(iframeId))
+      );
+    });
 
-    const modalDontClick = document.getElementById('modalDontClick');
-    const iframeDontClick = modalDontClick.querySelector('iframe');
-    const btnDontClick = document.getElementById('openDontClick');
-
-    const modalProver = document.getElementById('modalProver');
-    const iframeProver = modalProver.querySelector('iframe');
-    const btnProver = document.getElementById('openProver');
-
-    const modalDev = document.getElementById('modalDev');
-    const iframeDev = modalDev.querySelector('iframe');
-    const btnDev = document.getElementById('devIcon');
-
-    // Навешиваем обработчики открытия
-    btnEvilZkEgg.addEventListener('click', () => openModal(modalEvilZkEgg, iframeEvilZkEgg, 'ferris2.0.html'));
-    btnStackGpu.addEventListener('click', () => openModal(modalStackGpu, iframeStackGpu, 'gpu.html'));
-    btnPixGame.addEventListener('click', () => openModal(modalPixGame, iframePixGame, 'pix-game.html'));
-    btnDontClick.addEventListener('click', () => openModal(modalDontClick, iframeDontClick, 'dontclick.html'));
-    btnProver.addEventListener('click', () => openModal(modalProver, iframeProver, 'prover.html'));
-    btnDev.addEventListener('click', () => openModal(modalDev, iframeDev, 'dev.html'));
-
-    // Навешиваем обработчики закрытия
-    document.getElementById('closeEvilZkEgg').addEventListener('click', () => closeModal(modalEvilZkEgg, iframeEvilZkEgg));
-    document.getElementById('closeStackGpu').addEventListener('click', () => closeModal(modalStackGpu, iframeStackGpu));
-    document.getElementById('closePixGame').addEventListener('click', () => closeModal(modalPixGame, iframePixGame));
-    document.getElementById('closeDontClick').addEventListener('click', () => closeModal(modalDontClick, iframeDontClick));
-    document.getElementById('closeProver').addEventListener('click', () => closeModal(modalProver, iframeProver));
-    document.getElementById('closeDev').addEventListener('click', () => closeModal(modalDev, iframeDev));
-
-    // Закрытие по клику на оверлей
-    overlay.addEventListener('click', () => {
-      const modals = document.querySelectorAll('.modal');
-      const iframes = document.querySelectorAll('.modal iframe');
-      modals.forEach(m => m.style.display = 'none');
-      iframes.forEach(f => f.src = '');
-      overlay.style.display = 'none';
+    document.getElementById('overlay').addEventListener('click', () => {
+      document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+      document.querySelectorAll('.modal iframe').forEach(f => f.src = '');
+      document.getElementById('overlay').style.display = 'none';
     });
   </script>
 </body>

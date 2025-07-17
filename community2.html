@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Succinct Developer Community</title>
+<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  body {
+    margin: 0;
+    font-family: 'Titillium Web', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #111827);
+    color: white;
+    overflow: hidden;
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 70px;
+  }
+  h1 {
+    text-align: center;
+    padding: 30px;
+    font-size: 32px;
+    color: #93c5fd;
+  }
+  .space {
+    position: relative;
+    width: 100vw;
+    height: calc(100vh - 170px);
+    overflow: hidden;
+  }
+  .dev-circle {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: #1e293b;
+  border-radius: 50%;
+  border: 2px solid #6366f1;
+  box-shadow: 0 0 7px #6366f1;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  z-index: 1;
+}
+.dev-circle:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 15px #818cf8;
+  z-index: 10;
+}
+.dev-circle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+  .modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  background: #1f2937;
+  color: #f3f4f6;
+  border: 1px solid #4b5563;
+  padding: 20px 18px;     /* меньше внутренних отступов */
+  border-radius: 12px;
+  min-width: 220px;       /* уменьшить минимальную ширину */
+  max-width: 350px;       /* уменьшить максимальную ширину */
+  box-shadow: 0 0 20px #000;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  max-height: 75vh;       /* ограничить высоту окна */
+  overflow-y: auto;       /* добавить прокрутку, если контент длинный */
+}
+
+  .modal.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .modal a {
+    color: #93c5fd;
+    text-decoration: underline;
+  }
+  .close-btn {
+    margin-top: 15px;
+    background: #4b5563;
+    border: none;
+    padding: 8px 16px;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .close-btn:hover {
+    background: #6b7280;
+  }
+  .back-button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background-color: #6366f1;
+    border: none;
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 15px #6366f1;
+    transition: background-color 0.3s ease;
+    user-select: none;
+  }
+  .back-button:hover {
+    background-color: #818cf8;
+    box-shadow: 0 0 25px #818cf8;
+  }
+  .modal-photo {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px #6366f1;
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+</head>
+<body>
+<h1>Succinct Community Devs</h1>
+<div class="space" id="space"></div>
+
+<div class="modal" id="modal">
+  <!-- Added developer photo -->
+  <img src="" alt="Developer photo" id="modal-photo" class="modal-photo" />
+  <p>X Profile: <a href="#" id="modal-x" target="_blank" rel="noopener noreferrer">View</a></p>
+  <div><strong>Website's:</strong></div>
+  <ul id="modal-projects"></ul>
+  <button class="close-btn" onclick="closeModal()">Close</button>
+</div>
+
+<button class="back-button" id="backBtn">Back</button>
+
+<script>
+  const devs = [
+    { name: "@serkankels", avatar: "1.png", x: "https://x.com/serkankels",
+      projects: [
+        { name: "Succinct Luv Check", url: "https://succinct-luv-check.vercel.app/" },
+        { name: "Succinct Tic-Tac Stage 2.5", url: "https://succinct-tictacstage2-5.vercel.app/" },
+        { name: "Succinct Check", url: "https://succinct-check.vercel.app/" },
+        { name: "Succinct Members", url: "https://succinct-members.vercel.app/" },
+        { name: "Succinct Team Cards", url: "https://succinct-team-cards.vercel.app/" },
+        { name: "Succinct Map", url: "https://succinct-map.vercel.app/" },
+        { name: "Succinct Best", url: "https://succinct-best.vercel.app/" },
+        { name: "Succinct Platform", url: "https://succinct-platform.vercel.app/" },
+        { name: "Succinct Cluster", url: "https://succinct-cluster.vercel.app/" },
+        { name: "Succinct GuestBook", url: "https://succinct-guestbook.vercel.app/" },
+        { name: "Succinct Tasks", url: "https://succinct-tasks.vercel.app/" },
+        { name: "Succinct Phone", url: "https://succinct-phone.vercel.app/" },
+        { name: "Succinct Eggs", url: "https://succinct-eggs.vercel.app/" }
+      ]
+    },
+    { name: "@vs_ccb", avatar: "2.png", x: "https://x.com/vs_ccb",
+      projects: [
+        { name: "Pruv My Love", url: "https://pruvmylove.vercel.app/" },
+        { name: "Card Battle Topaz", url: "https://card-battle-topaz.vercel.app/" },
+        { name: "Hall of Fame", url: "https://halloffame-roan.vercel.app/" },
+        { name: "Succinct Shooterr", url: "https://succinct3d.netlify.app/succinct_shooterr.html" },
+        { name: "Finding Addy", url: "https://melodic-beignet-3bbe93.netlify.app/finding_addy.html" },
+        { name: "Pix PFP Guess", url: "https://pixpfp-guess.vercel.app/" }
+      ]
+    },
+    { name: "@KendineCrypto_", avatar: "3.png", x: "https://x.com/KendineCrypto_",
+      projects: [{ name: "Pixel War Game", url: "https://pixel-war-game.vercel.app/" }]
+    },
+    { name: "@Brian65233031", avatar: "4.png", x: "https://x.com/Brian65233031",
+      projects: [{ name: "SuccinctLabs Tap Game", url: "https://succinctlabs-tapgame.vercel.app/" }]
+    },
+    { name: "@KozakMazal", avatar: "5.png", x: "https://x.com/KozakMazal",
+      projects: [
+        { name: "Succinct Fight", url: "https://kozakmazal.itch.io/succinct-fight" },
+        { name: "Egg Roll Fortune", url: "https://kozakmazal.itch.io/egg-roll-fortune" },
+        { name: "Stage 2 Recap", url: "https://kozakmazal.itch.io/stage-2-recap" },
+        { name: "Crack The Egg", url: "https://kozakmazal.itch.io/crack-the-egg" }
+      ]
+    },
+    { name: "@fellow_cm", avatar: "6.png", x: "https://x.com/fellow_cm",
+      projects: [{ name: "Succinct Whack a Mole", url: "https://succint-whack-a-mole.vercel.app/" }]
+    },
+    { name: "@0XNEET", avatar: "7.png", x: "https://x.com/0XNEET",
+      projects: [
+        { name: "Succinct Playlist", url: "https://succinct-playlist.vercel.app/" },
+        { name: "Succinct TCG", url: "https://succinct-tcg.xyz/" }
+      ]
+    },
+    { name: "@0xKimBab", avatar: "8.png", x: "https://x.com/0xKimBab",
+      projects: [{ name: "Spone Fun", url: "https://spone.fun/draw" }]
+    },
+    { name: "@simplyorange12", avatar: "9.png", x: "https://x.com/simplyorange12",
+      projects: [{ name: "Succinct HyperCube", url: "https://succinct-hypercube.vercel.app/" }]
+    },
+    { name: "@AyayaGo99", avatar: "10.png", x: "https://x.com/AyayaGo99",
+      projects: [{ name: "Bidder Succinct Analytics", url: "https://biddersuccinct-analytics.vercel.app/" }]
+    },
+    { name: "@kurkovvokruk", avatar: "11.png", x: "https://x.com/kurkovvokruk",
+      projects: [
+        { name: "Succinct Fan", url: "https://www.succinctfan.xyz/" },
+        { name: "Second Phase Checker", url: "https://second-phase-checker.vercel.app/" }
+      ]
+    },
+    { name: "@CryptoAustinn", avatar: "12.png", x: "https://x.com/CryptoAustinn",
+      projects: [
+        { name: "Proof Pirate", url: "https://proof-pirate.vercel.app/" },
+        { name: "Prove Jump", url: "https://prove-jump.vercel.app/" },
+        { name: "Provelet", url: "https://provelet.vercel.app/" },
+        { name: "Egg Breaker Game", url: "https://egg-breaker-game.vercel.app/" }
+      ]
+    },
+    { name: "@0xEnsp1re", avatar: "13.png", x: "https://x.com/0xEnsp1re",
+      projects: [{ name: "Succinct Stats", url: "https://www.succinct-stats.xyz/" }]
+    },
+    { name: "@stepaks576", avatar: "14.png", x: "https://x.com/stepaks576",
+      projects: [{ name: "Succinct Stats", url: "https://www.succinct-stats.xyz/" }]
+    },
+    { name: "@Abid_Alpha", avatar: "15.png", x: "https://x.com/Abid_Alpha",
+      projects: [{ name: "Succigram", url: "https://succigram.vercel.app/" }]
+    },
+    { name: "@kesoonho", avatar: "16.png", x: "https://x.com/kesoonho",
+      projects: [
+        { name: "Succinct Stage 2 Data", url: "https://succinct-stage2-data.vercel.app/" },
+        { name: "Check Succinct", url: "https://checksuccinct.vercel.app/" }
+      ]
+    },
+    { name: "@Jekyde", avatar: "17.png", x: "https://x.com/Jekyde",
+      projects: [{ name: "All in Succinct", url: "https://www.allinsuccinct.xyz/" }]
+    },
+    { name: "@arpanberwal", avatar: "18.png", x: "https://x.com/arpanberwal",
+      projects: [
+        { name: "Succinct Colors", url: "https://succinctcolors.netlify.app/" },
+        { name: "Team Wars", url: "https://teamwars.netlify.app/" },
+        { name: "Succinct Social", url: "https://succinctsocial.netlify.app/" },
+        { name: "Succinctify", url: "https://succinctify.vercel.app/" }
+      ]
+    },
+    { name: "@bohdanlokotcs", avatar: "19.png", x: "https://x.com/bohdanlokotcs",
+      projects: [
+        { name: "Sign Labubu", url: "https://sign-labubu.web.app/" },
+        { name: "Succinct ID Generator", url: "https://succinct-id-generator.web.app/" },
+        { name: "Prover Pump", url: "https://proverpump.web.app/" },
+        { name: "Checker Succinct", url: "https://checker-succinct.web.app/" }
+      ]
+    },
+    { name: "@moulderofweb3", avatar: "20.png", x: "https://x.com/moulderofweb3",
+      projects: [{ name: "Succinct Game", url: "https://mikemoulder.itch.io/succuid-game-by-rex" }]
+    },
+    { name: "@RizzDroop23", avatar: "21.png", x: "https://x.com/RizzDroop23",
+      projects: [
+        { name: "Succinct Graffiti", url: "https://succinct-graffiti-wall.vercel.app/" },
+        { name: "Proofer Spot Map", url: "https://proofer-spot-map.vercel.app/" },
+        { name: "Proof of Typing", url: "https://proof-of-typing.vercel.app/" },
+        { name: "Proof of Score", url: "https://prove-of-score.vercel.app/" },
+        { name: "Proof of Speed", url: "https://proof-of-speed.vercel.app/" }
+      ]
+    },
+    { name: "@Diveaix", avatar: "22.png", x: "https://x.com/Diveaix",
+      projects: [
+        { name: "Succinct Eco Sigma", url: "https://succinct-eco-sigma.vercel.app/" },
+        { name: "SP1 Visuals", url: "https://sp1-visuals.vercel.app/" }
+      ]
+    },
+    { name: "@CyriptoMemo", avatar: "23.png", x: "https://x.com/CyriptoMemo",
+      projects: [
+        { name: "Succinct Ball", url: "https://mhmtemnbgr1.github.io/SuccinctBALL/" },
+        { name: "Wheel of Fortune", url: "https://mhmtemnbgr1.github.io/WheelOfFortune/" },
+        { name: "Succinct", url: "https://mhmtemnbgr1.github.io/Succinct/" },
+        { name: "Succinct Airdrop Checker", url: "https://mhmtemnbgr1.github.io/SuccinctAirdropChecker/" }
+      ]
+    },
+    { name: "@Mahakal95", avatar: "24.png", x: "https://x.com/Mahakal95",
+      projects: [
+        { name: "Spam Proofs", url: "https://spamproofs.vercel.app/" },
+        { name: "Succinct Flappy", url: "https://succinct-flappy.vercel.app/" },
+        { name: "Succinct Summer", url: "https://succinct-summer-website.vercel.app/" },
+        { name: "Succinct ZKProve Snake Game", url: "https://succinct-zkprove-snakegame.vercel.app/" }
+      ]
+    },
+    { name: "@BLOCKTECHDEFI", avatar: "25.png", x: "https://x.com/BLOCKTECHDEFI",
+      projects: [
+        { name: "Succinct Secret Messages", url: "https://succinct-secret-messages.vercel.app/" },
+        { name: "SuccinctLabs Hall of Fame", url: "https://succinctlabs-hall-of-fame.vercel.app/" },
+        { name: "Succinct Clob Dex", url: "https://succinct-clob-dex.vercel.app/" },
+        { name: "Succinct ZK NFT Market Place", url: "https://succinct-zk-nft-marketplace.vercel.app/" }
+      ]
+    },
+    { name: "@Magicianafk", avatar: "26.png", x: "https://x.com/Magicianafk",
+      projects: [
+        { name: "Succinct Mindshare Stonks", url: "https://succinctmindsharestonks.netlify.app/" },
+        { name: "Predict Succinct", url: "https://predict-succinct.netlify.app/" }
+      ]
+    },
+    { name: "@oboh_banny18", avatar: "27.png", x: "https://x.com/oboh_banny18",
+      projects: [{ name: "Succinct Playground", url: "https://succinct-playground.vercel.app/" }]
+    },
+    { name: "@Tabassumraisa4", avatar: "28.png", x: "https://x.com/Tabassumraisa4",
+      projects: [
+        { name: "Succinct Puzzle Game", url: "https://succinct-puzzle-game.vercel.app/" },
+        { name: "Succinct Airdrop Calculator", url: "https://succinct-airdrop-calculator.vercel.app/" }
+      ]
+    },
+    { name: "@Kutahai78", avatar: "29.png", x: "https://x.com/Kutahai78",
+      projects: [
+        { name: "Succinct Egg Bounce", url: "https://succinct-egg-bounce.vercel.app/" },
+        { name: "Succinct Egg Shooters", url: "https://succinct-egg-shooters.vercel.app/" },
+        { name: "Proof Hunter Melek", url: "https://proof-hunter-melek.vercel.app/" }
+      ]
+    },
+    { name: "@adigunq_adigun", avatar: "30.png", x: "https://x.com/adigunq_adigun",
+      projects: [
+        { name: "Succinct Stats", url: "https://succinctsstats.netlify.app/" }
+      ]
+    },
+    { name: "@sptnode", avatar: "31.png", x: "https://x.com/sptnode",
+      projects: [
+        { name: "Raid Succinct World", url: "https://raid.succinct-world.xyz/" },
+        { name: "Blog Succinct World", url: "https://blog.succinct-world.xyz/" }
+      ]
+    },
+    { name: "@Duskiesoul", avatar: "32.png", x: "https://x.com/Duskiesoul",
+      projects: [
+        { name: "Succinct Roast", url: "https://succinct-roast.vercel.app/" },
+        { name: "Succinct Verse", url: "https://succinct-verse.vercel.app/" },
+        { name: "Succinct Network", url: "https://succinct-network.vercel.app/" }
+      ]
+    },
+    { name: "@martinEderMi", avatar: "33.png", x: "https://x.com/martinEderMi",
+      projects: [
+        { name: "Martine Dermi", url: "https://martinedermi.vercel.app/" }
+      ]
+    },
+    { name: "@Abdullahi_wolf", avatar: "34.png", x: "https://x.com/Abdullahi_wolf",
+      projects: [
+        { name: "Succinct Checker", url: "https://succinct-checker.netlify.app/" }
+      ]
+    },
+    { name: "@_norlynjoyce", avatar: "35.png", x: "https://x.com/_norlynjoyce",
+      projects: [
+        { name: "Succinct Future", url: "https://succinct-future.vercel.app/" }
+      ]
+    },
+    { name: "@HunterGuy102", avatar: "36.png", x: "https://x.com/HunterGuy102",
+      projects: [
+        { name: "React Game Code", url: "https://v0-react-game-code-review.vercel.app/" }
+      ]
+    },
+    { name: "@defi_not_defry", avatar: "37.png", x: "https://x.com/defi_not_defry",
+      projects: [
+        { name: "Clobs on Blobs Olive", url: "https://clobs-on-blobs-olive.vercel.app/" }
+      ]
+    },
+    { name: "@oyetoludan01", avatar: "38.png", x: "https://x.com/oyetoludan01",
+      projects: [
+        { name: "Prover Naire", url: "https://provernaire-frontend.vercel.app/" }
+      ]
+    },
+    { name: "@MrishoLukamba", avatar: "39.png", x: "https://x.com/MrishoLukamba",
+      projects: [
+        { name: "Vane Web3", url: "https://app.vaneweb3.com/" }
+      ]
+    },
+    { name: "@0xDfinity", avatar: "40.png", x: "https://x.com/0xDfinity",
+      projects: [
+        { name: "Succinct Forge", url: "https://succinct-forge.vercel.app/" }
+      ]
+    },
+    { name: "@wru_kii", avatar: "41.png", x: "https://x.com/wru_kii",
+      projects: [
+        { name: "ZK Dodge", url: "https://zk-dodge.vercel.app/" }
+      ]
+    },
+    { name: "@neko_smg", avatar: "42.png", x: "https://x.com/neko_smg",
+      projects: [
+        { name: "Succinct Talk", url: "https://misochan7.github.io/succincttalk/" }
+      ]
+    },
+    { name: "@DoctorDr1on", avatar: "43.png", x: "https://x.com/DoctorDr1on",
+      projects: [
+        { name: "Eggochi", url: "https://eggochi.fun/" }
+      ]
+    },
+    { name: "@nrlartt", avatar: "44.png", x: "https://x.com/nrlartt",
+      projects: [
+        { name: "Succinct Summer Shop", url: "https://succinctsummershop.fun/" }
+      ]
+    },
+    { name: "@0xboomin", avatar: "45.png", x: "https://x.com/0xboomin",
+      projects: [
+        { name: "Veri Star Part 2", url: "https://veristar-pt2.vercel.app/" }
+      ]
+    },
+    { name: "@revenes_", avatar: "46.png", x: "https://x.com/revenes_",
+      projects: [
+        { name: "Call of Proof", url: "https://revenes.itch.io/call-of-proof" }
+      ]
+    },
+    { name: "@MrS1rsh", avatar: "47.png", x: "https://x.com/MrS1rsh",
+      projects: [
+        { name: "Succinct Daily", url: "https://succint-daily.vercel.app/" }
+      ]
+    },
+    { name: "@AThryver", avatar: "48.png", x: "https://x.com/AThryver",
+      projects: [
+        { name: "Succinct Shell Game", url: "https://succinct-shell-game.vercel.app/" }
+      ]
+    },
+    { name: "@HallenjayArt", avatar: "49.png", x: "https://x.com/HallenjayArt",
+      projects: [
+        { name: "Succinct Jaytechent", url: "https://succinct.jaytechent.site/" }
+      ]
+    },
+    { name: "@dace2548", avatar: "50.png", x: "https://x.com/dace2548",
+      projects: [
+        { name: "Succinct Game 2.5", url: "https://vuhaiminh2k5.github.io/succinctgame2.5/" }
+      ]
+    },
+    { name: "@Hu14951738", avatar: "51.png", x: "https://x.com/Hu14951738",
+      projects: [
+        { name: "Succinct Site Tuong", url: "https://succinctsitetuong.vercel.app/" }
+      ]
+    },
+    { name: "@therealzapzap", avatar: "52.png", x: "https://x.com/therealzapzap",
+      projects: [
+        { name: "ZK Egg", url: "https://zkegg.vercel.app/" }
+      ]
+    },
+    { name: "@DDenicah", avatar: "53.png", x: "https://x.com/DDenicah",
+      projects: [
+        { name: "Floppy GPU", url: "https://floppy-gpu-ov4rlxrd.vercel.app/" }
+      ]
+    },
+    { name: "@TheGamb1t", avatar: "54.png", x: "https://x.com/TheGamb1t",
+      projects: [
+        { name: "Succinct Game", url: "https://gambit67.github.io/SuccintGame/" }
+      ]
+    },
+    { name: "@null_saga", avatar: "55.png", x: "https://x.com/null_saga",
+      projects: [
+        { name: "Succinct Creator", url: "https://succinct-creator.xyz/" }
+      ]
+    },
+    { name: "@0xMoei", avatar: "56.png", x: "https://x.com/0xMoei",
+      projects: [
+        { name: "Succinct Stake Portal", url: "https://succinct-stake-portal.vercel.app/" }
+      ]
+    },
+    { name: "@shery_sol", avatar: "57.png", x: "https://x.com/shery_sol",
+      projects: [
+        { name: "Succinct Chi", url: "https://succinct-chi.vercel.app/" },
+        { name: "Succinct Website", url: "https://succinct-website.vercel.app/" },
+        { name: "Succinct Brick Breaker", url: "https://succinct-brickbreaker.vercel.app/" }
+      ]
+    },
+    { name: "@cagdasspolatt", avatar: "58.png", x: "https://x.com/cagdasspolatt",
+      projects: [
+        { name: "Succinct Summer Games", url: "https://succinct-summer-games.vercel.app/" }
+      ]
+    },
+    { name: "@Delta_web3", avatar: "59.png", x: "https://x.com/Delta_web3",
+      projects: [
+        { name: "ZK Provers", url: "https://zk-provers.vercel.app/" }
+      ]
+    },
+    { name: "@FlawlezzMyztery", avatar: "60.png", x: "https://x.com/FlawlezzMyztery",
+      projects: [
+        { name: "Succinct Crossword", url: "https://succint-crossword.vercel.app/" },
+        { name: "Succinct Memory", url: "https://succint-memory-match.vercel.app/" }
+      ]
+    },
+    { name: "@0xCCKP", avatar: "61.png", x: "https://x.com/0xCCKP",
+      projects: [
+        { name: "Crabby on Succinct", url: "https://crabby-on-succinct.netlify.app/" }
+      ]
+    },
+    { name: "@jarizxbt", avatar: "62.png", x: "https://x.com/jarizxbt",
+      projects: [
+        { name: "Succinct for Dummies", url: "https://succinct-for-dummies.vercel.app/" }
+      ]
+    },
+    { name: "@Mota_kidah", avatar: "63.png", x: "https://x.com/Mota_kidah",
+      projects: [
+        { name: "ZK Trivia", url: "https://zk-trivia.vercel.app/" }
+      ]
+    },
+    { name: "@EMPERORBB7", avatar: "64.png", x: "https://x.com/EMPERORBB7",
+      projects: [
+        { name: "SuccinctLabs Trivia Clash", url: "https://succinctlabs-trivia-clash.vercel.app/" }
+      ]
+    },
+    { name: "@cotantanax", avatar: "65.png", x: "https://x.com/cotantanax",
+      projects: [
+        { name: "SuccinctLandia ID Card Builder", url: "https://tablemagico.github.io/succinct--d-card/" }
+      ]
+    },
+    { name: "@Arun__993", avatar: "66.png", x: "https://x.com/Arun__993",
+      projects: [
+        { name: "Succinct PFP Generator", url: "https://succinct-pfp-generator.netlify.app/" }
+      ]
+    },
+    { name: "@abolaji_ol4", avatar: "67.png", x: "https://x.com/abolaji_ol4",
+      projects: [
+        { name: "Average Multiplier", url: "https://average-multiplier.vercel.app/" }
+      ]
+    },
+    { name: "@0xzmk", avatar: "68.png", x: "https://x.com/0xzmk",
+      projects: [
+        { name: "Prover Stage 2.5", url: "https://prover-stage-2-5.vercel.app/" }
+      ]
+    }
+  ];
+
+  const space = document.getElementById('space');
+  const modal = document.getElementById('modal');
+  const modalX = document.getElementById('modal-x');
+  const modalProjects = document.getElementById('modal-projects');
+  const modalPhoto = document.getElementById('modal-photo');
+
+  const circles = [];
+  const circleSize = 50;
+
+  function openModal(dev) {
+    document.getElementById('backBtn').style.zIndex = '0';
+    modal.classList.add('active');
+    modalX.href = dev.x;
+    modalX.textContent = dev.x;
+    modalProjects.innerHTML = '';
+
+    // Set the photo in modal
+    modalPhoto.src = dev.avatar;
+    modalPhoto.alt = dev.name + " photo";
+
+    dev.projects.forEach(p => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = p.url;
+      a.textContent = p.name;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      li.appendChild(a);
+      modalProjects.appendChild(li);
+    });
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.getElementById('backBtn').style.zIndex = '1000';
+  }
+
+  devs.forEach(dev => {
+    const icon = document.createElement('div');
+    icon.classList.add('dev-circle');
+    const img = document.createElement('img');
+    img.src = dev.avatar;
+    img.alt = dev.name;
+    icon.appendChild(img);
+
+    const cw = space.clientWidth;
+    const ch = space.clientHeight;
+
+    let xPos = Math.random() * (cw - circleSize);
+    let yPos = Math.random() * (ch - circleSize);
+
+    icon.style.left = xPos + 'px';
+    icon.style.top = yPos + 'px';
+
+    icon.onclick = () => openModal(dev);
+
+    space.appendChild(icon);
+
+    const speedX = (Math.random() * 0.5 + 0.1) * (Math.random() < 0.5 ? 1 : -1);
+    const speedY = (Math.random() * 0.5 + 0.1) * (Math.random() < 0.5 ? 1 : -1);
+
+    circles.push({
+      el: icon,
+      x: xPos,
+      y: yPos,
+      vx: speedX,
+      vy: speedY,
+      width: circleSize,
+      height: circleSize,
+      containerWidth: cw,
+      containerHeight: ch,
+    });
+  });
+
+  function animate() {
+    circles.forEach(c => {
+      c.x += c.vx;
+      c.y += c.vy;
+
+      if (c.x <= 0) {
+        c.x = 0;
+        c.vx *= -1;
+      } else if (c.x + c.width >= c.containerWidth) {
+        c.x = c.containerWidth - c.width;
+        c.vx *= -1;
+      }
+      if (c.y <= 0) {
+        c.y = 0;
+        c.vy *= -1;
+      } else if (c.y + c.height >= c.containerHeight) {
+        c.y = c.containerHeight - c.height;
+        c.vy *= -1;
+      }
+      c.el.style.left = c.x + 'px';
+      c.el.style.top = c.y + 'px';
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  window.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+
+  window.addEventListener('resize', () => {
+    const cw = space.clientWidth;
+    const ch = space.clientHeight;
+    circles.forEach(c => {
+      c.containerWidth = cw;
+      c.containerHeight = ch;
+      if (c.x + c.width > cw) c.x = cw - c.width;
+      if (c.y + c.height > ch) c.y = ch - c.height;
+    });
+  });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    window.location.href = 'community.html';
+  });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Succinct Project List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Titillium Web', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+      background: linear-gradient(135deg, #111827, #0f172a);
+      color: #e0e0e0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .info-block {
+      margin-bottom: 20px;
+
+    }
+.open-community {
+  margin-top: 10px;
+}
+
+.community-button {
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid #8B5CF6;
+  box-shadow: 0 0 12px #8B5CF6;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.community-button:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px #A78BFA;
+}
+
+
+    .info-block p {
+      font-size: 16px;
+      margin: 0 0 10px;
+      line-height: 1.5;
+      color: #e0e0e0;
+    }
+
+    .info-block a {
+      color: #8B5CF6;
+      text-decoration: underline;
+    }
+
+    .search-box {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .search-box label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .search-box input {
+      padding: 8px;
+      font-size: 15px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background-color: #1f2937;
+      color: #f3f3f3;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .list-container {
+      border: 2px solid #333;
+      border-radius: 8px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: rgba(17, 24, 39, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(31, 41, 55, 0.9);
+      border-bottom: 1px solid #444;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-row > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 20px 2px 20px;
+    }
+
+    .header-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .list-item:nth-child(odd) {
+      background-color: #3B0764;
+    }
+
+    .list-item:nth-child(even) {
+      background-color: #9333EA;
+    }
+
+    .list-item a {
+      color: #E0E7FF;
+      text-decoration: underline;
+      word-break: break-word;
+    }
+
+    .list-item a:hover {
+      color: #a5b4fc;
+    }
+
+    .left, .right {
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+    }
+
+    @media (max-width: 600px) {
+      .list-item, .header-row {
+        grid-template-columns: 1fr;
+      }
+      .header-row > div {
+        padding: 10px 8px 2px 8px;
+      }
+      .list-item {
+        padding: 10px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+   <div class="info-block">
+  <p>
+    <strong>gProve</strong>, If you're a dev and I haven't listed your website then message me in DM –
+    <a href="https://x.com/realsirandrew" target="_blank">@realsir</a>
+  </p>
+
+  <!-- КНОПКА-ПЕРЕХОД НА community2.html -->
+  <div class="open-community">
+    <img
+      src="succinct.png"
+      alt="Open Dev Community"
+      class="community-button"
+      onclick="window.location.href='community2.html';"
+    />
+  </div>
+</div>
+
+
+      <!-- тут уже идут ваши .list-item блоки -->
+      <!-- вставлены ранее вручную или сгенерированы -->
+
+      <!-- Missing entries for @serkankels -->
+<div class="list-item"><div class="left"><a href="https://succinct-luv-check.vercel.app/" target="_blank">Succinct Luv Check</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-tictacstage2-5.vercel.app/" target="_blank">Succinct Tic-Tac Stage 2.5</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-check.vercel.app/" target="_blank">Succinct Check</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-members.vercel.app/" target="_blank">Succinct Members</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-team-cards.vercel.app/" target="_blank">Succinct Team Cards</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-map.vercel.app/" target="_blank">Succinct Map</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-best.vercel.app/" target="_blank">Succinct Best</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-platform.vercel.app/" target="_blank">Succinct Platform</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-cluster.vercel.app/" target="_blank">Succinct Cluster</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-guestbook.vercel.app/" target="_blank">Succinct GuestBook</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-tasks.vercel.app/" target="_blank">Succinct Tasks</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-phone.vercel.app/" target="_blank">Succinct Phone</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct-eggs.vercel.app/" target="_blank">Succinct Eggs</a></div><div class="right"><a href="https://x.com/serkankels" target="_blank">@serkankels</a></div></div>
+
+<!-- Missing entries for @vs_ccb -->
+<div class="list-item"><div class="left"><a href="https://pruvmylove.vercel.app/" target="_blank">Pruv My Love</a></div><div class="right"><a href="https://x.com/vs_ccb" target="_blank">@vs_ccb</a></div></div>
+<div class="list-item"><div class="left"><a href="https://card-battle-topaz.vercel.app/" target="_blank">Card Battle Topaz</a></div><div class="right"><a href="https://x.com/vs_ccb" target="_blank">@vs_ccb</a></div></div>
+<div class="list-item"><div class="left"><a href="https://halloffame-roan.vercel.app/" target="_blank">Hall of Fame</a></div><div class="right"><a href="https://x.com/vs_ccb" target="_blank">@vs_ccb</a></div></div>
+<div class="list-item"><div class="left"><a href="https://succinct3d.netlify.app/succinct_shooterr.html" target="_blank">Succinct Shooterr</a></div><div class="right"><a href="https://x.com/vs_ccb" target="_blank">@vs_ccb</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://melodic-beignet-3bbe93.netlify.app/finding_addy.html" target="_blank">Finding Addy</a></div><div class="right"><a href="https://x.com/vs_ccb" target="_blank">@vs_ccb</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://pixpfp-guess.vercel.app/" target="_blank">Pix PFP Guess</a></div><div class="right"><a href="https://x.com/vs_ccb" target="_blank">@vs_ccb</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://pixel-war-game.vercel.app/" target="_blank">Pixel War Game</a></div><div class="right"><a href="https://x.com/KendineCrypto_" target="_blank">@KendineCrypto_</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctlabs-tapgame.vercel.app/" target="_blank">SuccinctLabs Tap Game</a></div><div class="right"><a href="https://x.com/Brian65233031" target="_blank">@Brian65233031</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://kozakmazal.itch.io/succinct-fight" target="_blank">Succinct Fight</a></div><div class="right"><a href="https://x.com/KozakMazal" target="_blank">@KozakMazal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://kozakmazal.itch.io/egg-roll-fortune" target="_blank">Egg Roll Fortune</a></div><div class="right"><a href="https://x.com/KozakMazal" target="_blank">@KozakMazal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://kozakmazal.itch.io/stage-2-recap" target="_blank">Stage 2 Recap</a></div><div class="right"><a href="https://x.com/KozakMazal" target="_blank">@KozakMazal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://kozakmazal.itch.io/crack-the-egg" target="_blank">Crack The Egg</a></div><div class="right"><a href="https://x.com/KozakMazal" target="_blank">@KozakMazal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succint-whack-a-mole.vercel.app/" target="_blank">Succinct Whack a Mole</a></div><div class="right"><a href="https://x.com/fellow_cm" target="_blank">@fellow_cm</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-playlist.vercel.app/" target="_blank">Succinct Playlist</a></div><div class="right"><a href="https://x.com/0XNEET" target="_blank">@0XNEET</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-tcg.xyz/" target="_blank">Succinct TCG</a></div><div class="right"><a href="https://x.com/0XNEET" target="_blank">@0XNEET</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://spone.fun/draw" target="_blank">Spone Fun</a></div><div class="right"><a href="https://x.com/0xKimBab" target="_blank">@0xKimBab</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-hypercube.vercel.app/" target="_blank">Succinct HyperCube</a></div><div class="right"><a href="https://x.com/simplyorange12" target="_blank">@simplyorange12</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://biddersuccinct-analytics.vercel.app/" target="_blank">Bidder Succinct Analytics</a></div><div class="right"><a href="https://x.com/AyayaGo99" target="_blank">@AyayaGo99</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://www.succinctfan.xyz/" target="_blank">Succinct Fan</a></div><div class="right"><a href="https://x.com/kurkovvokruk" target="_blank">@kurkovvokruk</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://second-phase-checker.vercel.app/" target="_blank">Second Phase Checker</a></div><div class="right"><a href="https://x.com/kurkovvokruk" target="_blank">@kurkovvokruk</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://proof-pirate.vercel.app/" target="_blank">Proof Pirate</a></div><div class="right"><a href="https://x.com/CryptoAustinn" target="_blank">@CryptoAustinn</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://prove-jump.vercel.app/" target="_blank">Prove Jump</a></div><div class="right"><a href="https://x.com/CryptoAustinn" target="_blank">@CryptoAustinn</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://provelet.vercel.app/" target="_blank">Provelet</a></div><div class="right"><a href="https://x.com/CryptoAustinn" target="_blank">@CryptoAustinn</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://egg-breaker-game.vercel.app/" target="_blank">Egg Breaker Game</a></div><div class="right"><a href="https://x.com/CryptoAustinn" target="_blank">@CryptoAustinn</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://www.succinct-stats.xyz/" target="_blank">Succinct Stats</a></div><div class="right"><a href="https://x.com/0xEnsp1re" target="_blank">@0xEnsp1re</a>, <a href="https://x.com/stepaks576" target="_blank">@stepaks576</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succigram.vercel.app/" target="_blank">Succigram</a></div><div class="right"><a href="https://x.com/Abid_Alpha" target="_blank">@Abid_Alpha</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-stage2-data.vercel.app/" target="_blank">Succinct Stage 2 Data</a></div><div class="right"><a href="https://x.com/kesoonho" target="_blank">@kesoonho</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://checksuccinct.vercel.app/" target="_blank">Check Succinct</a></div><div class="right"><a href="https://x.com/kesoonho" target="_blank">@kesoonho</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://www.allinsuccinct.xyz/" target="_blank">All in Succinct</a></div><div class="right"><a href="https://x.com/Jekyde" target="_blank">@Jekyde</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctcolors.netlify.app/" target="_blank">Succinct Colors</a></div><div class="right"><a href="https://x.com/arpanberwal" target="_blank">@arpanberwal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://teamwars.netlify.app/" target="_blank">Team Wars</a></div><div class="right"><a href="https://x.com/arpanberwal" target="_blank">@arpanberwal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctsocial.netlify.app/" target="_blank">Succinct Social</a></div><div class="right"><a href="https://x.com/arpanberwal" target="_blank">@arpanberwal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctify.vercel.app/" target="_blank">Succinctify</a></div><div class="right"><a href="https://x.com/arpanberwal" target="_blank">@arpanberwal</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://sign-labubu.web.app/" target="_blank">Sign Labubu</a></div><div class="right"><a href="https://x.com/bohdanlokotcs" target="_blank">@bohdanlokotcs</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-id-generator.web.app/" target="_blank">Succinct ID Generator</a></div><div class="right"><a href="https://x.com/bohdanlokotcs" target="_blank">@bohdanlokotcs</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://proverpump.web.app/" target="_blank">Prover Pump</a></div><div class="right"><a href="https://x.com/bohdanlokotcs" target="_blank">@bohdanlokotcs</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://checker-succinct.web.app/" target="_blank">Checker Succinct</a></div><div class="right"><a href="https://x.com/bohdanlokotcs" target="_blank">@bohdanlokotcs</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://mikemoulder.itch.io/succuid-game-by-rex" target="_blank">Succinct Game</a></div><div class="right"><a href="https://x.com/moulderofweb3" target="_blank">@moulderofweb3</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-graffiti-wall.vercel.app/" target="_blank">Succinct Graffiti</a></div><div class="right"><a href="https://x.com/RizzDroop23" target="_blank">@RizzDroop23</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://proofer-spot-map.vercel.app/" target="_blank">Proofer Spot Map</a></div><div class="right"><a href="https://x.com/RizzDroop23" target="_blank">@RizzDroop23</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://proof-of-typing.vercel.app/" target="_blank">Proof of Typing</a></div><div class="right"><a href="https://x.com/RizzDroop23" target="_blank">@RizzDroop23</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://prove-of-score.vercel.app/" target="_blank">Proof of Score</a></div><div class="right"><a href="https://x.com/RizzDroop23" target="_blank">@RizzDroop23</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://proof-of-speed.vercel.app/" target="_blank">Proof of Speed</a></div><div class="right"><a href="https://x.com/RizzDroop23" target="_blank">@RizzDroop23</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-eco-sigma.vercel.app/" target="_blank">Succinct Eco Sigma</a></div><div class="right"><a href="https://x.com/Diveaix" target="_blank">@Diveaix</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://sp1-visuals.vercel.app/" target="_blank">SP1 Visuals</a></div><div class="right"><a href="https://x.com/Diveaix" target="_blank">@Diveaix</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://mhmtemnbgr1.github.io/SuccinctBALL/" target="_blank">Succinct Ball</a></div><div class="right"><a href="https://x.com/CyriptoMemo" target="_blank">@CyriptoMemo</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://mhmtemnbgr1.github.io/WheelOfFortune/" target="_blank">Wheel of Fortune</a></div><div class="right"><a href="https://x.com/CyriptoMemo" target="_blank">@CyriptoMemo</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://mhmtemnbgr1.github.io/Succinct/" target="_blank">Succinct</a></div><div class="right"><a href="https://x.com/CyriptoMemo" target="_blank">@CyriptoMemo</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://mhmtemnbgr1.github.io/SuccinctAirdropChecker/" target="_blank">Succinct Airdrop Checker</a></div><div class="right"><a href="https://x.com/CyriptoMemo" target="_blank">@CyriptoMemo</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://spamproofs.vercel.app/" target="_blank">Spam Proofs</a></div><div class="right"><a href="https://x.com/Mahakal95" target="_blank">@Mahakal95</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-flappy.vercel.app/" target="_blank">Succinct Flappy</a></div><div class="right"><a href="https://x.com/Mahakal95" target="_blank">@Mahakal95</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-summer-website.vercel.app/" target="_blank">Succinct Summer</a></div><div class="right"><a href="https://x.com/Mahakal95" target="_blank">@Mahakal95</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-zkprove-snakegame.vercel.app/" target="_blank">Succinct ZKProve Snake Game</a></div><div class="right"><a href="https://x.com/Mahakal95" target="_blank">@Mahakal95</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-secret-messages.vercel.app/" target="_blank">Succinct Secret Messages</a></div><div class="right"><a href="https://x.com/BLOCKTECHDEFI" target="_blank">@BLOCKTECHDEFI</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctlabs-hall-of-fame.vercel.app/" target="_blank">SuccinctLabs Hall of Fame</a></div><div class="right"><a href="https://x.com/BLOCKTECHDEFI" target="_blank">@BLOCKTECHDEFI</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-clob-dex.vercel.app/" target="_blank">Succinct Clob Dex</a></div><div class="right"><a href="https://x.com/BLOCKTECHDEFI" target="_blank">@BLOCKTECHDEFI</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-zk-nft-marketplace.vercel.app/" target="_blank">Succinct ZK NFT Market Place</a></div><div class="right"><a href="https://x.com/BLOCKTECHDEFI" target="_blank">@BLOCKTECHDEFI</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctmindsharestonks.netlify.app/" target="_blank">Succinct Mindshare Stonks</a></div><div class="right"><a href="https://x.com/Magicianafk" target="_blank">@Magicianafk</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://predict-succinct.netlify.app/" target="_blank">Predict Succinct</a></div><div class="right"><a href="https://x.com/Magicianafk" target="_blank">@Magicianafk</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-playground.vercel.app/" target="_blank">Succinct Playground</a></div><div class="right"><a href="https://x.com/oboh_banny18" target="_blank">@oboh_banny18</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-puzzle-game.vercel.app/" target="_blank">Succinct Puzzle Game</a></div><div class="right"><a href="https://x.com/Tabassumraisa4" target="_blank">@Tabassumraisa4</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-airdrop-calculator.vercel.app/" target="_blank">Succinct Airdrop Calculator</a></div><div class="right"><a href="https://x.com/Tabassumraisa4" target="_blank">@Tabassumraisa4</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-egg-bounce.vercel.app/" target="_blank">Succinct Egg Bounce</a></div><div class="right"><a href="https://x.com/Kutahai78" target="_blank">@Kutahai78</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-egg-shooters.vercel.app/" target="_blank">Succinct Egg Shooters</a></div><div class="right"><a href="https://x.com/Kutahai78" target="_blank">@Kutahai78</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://proof-hunter-melek.vercel.app/" target="_blank">Proof Hunter Melek</a></div><div class="right"><a href="https://x.com/Kutahai78" target="_blank">@Kutahai78</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctsstats.netlify.app/" target="_blank">Succinct Stats</a></div><div class="right"><a href="https://x.com/adigunq_adigun" target="_blank">@adigunq_adigun</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://raid.succinct-world.xyz/" target="_blank">Raid Succinct World</a></div><div class="right"><a href="https://x.com/sptnode" target="_blank">@sptnode</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://blog.succinct-world.xyz/" target="_blank">Blog Succinct World</a></div><div class="right"><a href="https://x.com/sptnode" target="_blank">@sptnode</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-roast.vercel.app/" target="_blank">Succinct Roast</a></div><div class="right"><a href="https://x.com/Duskiesoul" target="_blank">@Duskiesoul</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-verse.vercel.app/" target="_blank">Succinct Verse</a></div><div class="right"><a href="https://x.com/Duskiesoul" target="_blank">@Duskiesoul</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-network.vercel.app/" target="_blank">Succinct Network</a></div><div class="right"><a href="https://x.com/Duskiesoul" target="_blank">@Duskiesoul</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://martinedermi.vercel.app/" target="_blank">Martine Dermi</a></div><div class="right"><a href="https://x.com/martinEderMi" target="_blank">@martinEderMi</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-checker.netlify.app/" target="_blank">Succinct Checker</a></div><div class="right"><a href="https://x.com/Abdullahi_wolf" target="_blank">@Abdullahi_wolf</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-future.vercel.app/" target="_blank">Succinct Future</a></div><div class="right"><a href="https://x.com/_norlynjoyce" target="_blank">@_norlynjoyce</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://v0-react-game-code-review.vercel.app/" target="_blank">React Game Code</a></div><div class="right"><a href="https://x.com/HunterGuy102" target="_blank">@HunterGuy102</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://clobs-on-blobs-olive.vercel.app/" target="_blank">Clobs on Blobs Olive</a></div><div class="right"><a href="https://x.com/defi_not_defry" target="_blank">@defi_not_defry</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://provernaire-frontend.vercel.app/" target="_blank">Prover Naire</a></div><div class="right"><a href="https://x.com/oyetoludan01" target="_blank">@oyetoludan01</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://app.vaneweb3.com/" target="_blank">Vane Web3</a></div><div class="right"><a href="https://x.com/MrishoLukamba" target="_blank">@MrishoLukamba</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-forge.vercel.app/" target="_blank">Succinct Forge</a></div><div class="right"><a href="https://x.com/0xDfinity" target="_blank">@0xDfinity</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://zk-dodge.vercel.app/" target="_blank">ZK Dodge</a></div><div class="right"><a href="https://x.com/wru_kii" target="_blank">@wru_kii</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://misochan7.github.io/succincttalk/" target="_blank">Succinct Talk</a></div><div class="right"><a href="https://x.com/neko_smg" target="_blank">@neko_smg</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://eggochi.fun/" target="_blank">Eggochi</a></div><div class="right"><a href="https://x.com/DoctorDr1on" target="_blank">@DoctorDr1on</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctsummershop.fun/" target="_blank">Succinct Summer Shop</a></div><div class="right"><a href="https://x.com/nrlartt" target="_blank">@nrlartt</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://veristar-pt2.vercel.app/" target="_blank">Veri Star Part 2</a></div><div class="right"><a href="https://x.com/0xboomin" target="_blank">@0xboomin</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://revenes.itch.io/call-of-proof" target="_blank">Call of Proof</a></div><div class="right"><a href="https://x.com/revenes_" target="_blank">@revenes_</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succint-daily.vercel.app/" target="_blank">Succinct Daily</a></div><div class="right"><a href="https://x.com/MrS1rsh" target="_blank">@MrS1rsh</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-shell-game.vercel.app/" target="_blank">Succinct Shell Game</a></div><div class="right"><a href="https://x.com/AThryver" target="_blank">@AThryver</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct.jaytechent.site/" target="_blank">Succinct Jaytechent</a></div><div class="right"><a href="https://x.com/HallenjayArt" target="_blank">@HallenjayArt</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://vuhaiminh2k5.github.io/succinctgame2.5/" target="_blank">Succinct Game 2.5</a></div><div class="right"><a href="https://x.com/dace2548" target="_blank">@dace2548</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctsitetuong.vercel.app/" target="_blank">Succinct Site Tuong</a></div><div class="right"><a href="https://x.com/Hu14951738" target="_blank">@Hu14951738</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://zkegg.vercel.app/" target="_blank">ZK Egg</a></div><div class="right"><a href="https://x.com/therealzapzap" target="_blank">@therealzapzap</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://floppy-gpu-ov4rlxrd.vercel.app/" target="_blank">Floppy GPU</a></div><div class="right"><a href="https://x.com/DDenicah" target="_blank">@DDenicah</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://gambit67.github.io/SuccintGame/" target="_blank">Succinct Game</a></div><div class="right"><a href="https://x.com/TheGamb1t" target="_blank">@TheGamb1t</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-creator.xyz/" target="_blank">Succinct Creator</a></div><div class="right"><a href="https://x.com/null_saga" target="_blank">@null_saga</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-stake-portal.vercel.app/" target="_blank">Succinct Stake Portal</a></div><div class="right"><a href="https://x.com/0xMoei" target="_blank">@0xMoei</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-chi.vercel.app/" target="_blank">Succinct Chi</a></div><div class="right"><a href="https://x.com/shery_sol" target="_blank">@shery_sol</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-website.vercel.app/" target="_blank">Succinct Website</a></div><div class="right"><a href="https://x.com/shery_sol" target="_blank">@shery_sol</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-brickbreaker.vercel.app/" target="_blank">Succinct Brick Breaker</a></div><div class="right"><a href="https://x.com/shery_sol" target="_blank">@shery_sol</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-summer-games.vercel.app/" target="_blank">Succinct Summer Games</a></div><div class="right"><a href="https://x.com/cagdasspolatt" target="_blank">@cagdasspolatt</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://zk-provers.vercel.app/" target="_blank">ZK Provers</a></div><div class="right"><a href="https://x.com/Delta_web3" target="_blank">@Delta_web3</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succint-crossword.vercel.app/" target="_blank">Succinct Crossword</a></div><div class="right"><a href="https://x.com/FlawlezzMyztery" target="_blank">@FlawlezzMyztery</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succint-memory-match.vercel.app/" target="_blank">Succinct Memory</a></div><div class="right"><a href="https://x.com/FlawlezzMyztery" target="_blank">@FlawlezzMyztery</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://crabby-on-succinct.netlify.app/" target="_blank">Crabby on Succinct</a></div><div class="right"><a href="https://x.com/0xCCKP" target="_blank">@0xCCKP</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-for-dummies.vercel.app/" target="_blank">Succinct for Dummies</a></div><div class="right"><a href="https://x.com/jarizxbt" target="_blank">@jarizxbt</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://zk-trivia.vercel.app/" target="_blank">ZK Trivia</a></div><div class="right"><a href="https://x.com/Mota_kidah" target="_blank">@Mota_kidah</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinctlabs-trivia-clash.vercel.app/" target="_blank">SuccinctLabs Trivia Clash</a></div><div class="right"><a href="https://x.com/EMPERORBB7" target="_blank">@EMPERORBB7</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://tablemagico.github.io/succinct--d-card/" target="_blank">SuccinctLandia ID Card Builder</a></div><div class="right"><a href="https://x.com/cotantanax" target="_blank">@cotantanax</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://succinct-pfp-generator.netlify.app/" target="_blank">Succinct PFP Generator</a></div><div class="right"><a href="https://x.com/Arun__993" target="_blank">@Arun__993</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://average-multiplier.vercel.app/" target="_blank">Average Multiplier</a></div><div class="right"><a href="https://x.com/abolaji_ol4" target="_blank">@abolaji_ol4</a></div></div>
+      <div class="list-item"><div class="left"><a href="https://prover-stage-2-5.vercel.app/" target="_blank">Prover Stage 2.5</a></div><div class="right"><a href="https://x.com/0xzmk" target="_blank">@0xzmk</a></div></div>
+    </div>
+  
+
+  <script>
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', function () {
+      const query = this.value.toLowerCase();
+      const items = document.querySelectorAll('.list-item');
+      items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(query) ? 'grid' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
+
+
+
