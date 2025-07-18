@@ -269,7 +269,6 @@
   </div>
 </div>
 <script>
-  // Анимация летающих яиц на фоне инструкции
   const eggImgs = ['egg.png', 'egg2.png'];
   const bgEggCount = 22;
   const flyingEggsBg = document.getElementById('flyingEggsBg');
@@ -306,7 +305,6 @@
   }
   animateBgEggs();
 
-  // ==== Enemy trail logic ====
   let activeEnemyTrails = [];
   function addEnemyTrail(row, col) {
     activeEnemyTrails.push({
@@ -319,7 +317,7 @@
   function cleanupEnemyTrails() {
     const now = Date.now();
     activeEnemyTrails = activeEnemyTrails.filter(trail => trail.expiresAt > now);
-    // remove expired .trail-cell
+    
     document.querySelectorAll('.trail-cell').forEach(cell => {
       if (Number(cell.getAttribute('data-expire')) < now) cell.remove();
     });
@@ -344,7 +342,7 @@
     return false;
   }
 
-  // ---- ИГРА ----
+  
 
 const CELL_SIZE = 32;
 const ROWS = 17;
@@ -566,7 +564,7 @@ function showZkCapPopup(type) {
   setTimeout(() => popup.remove(), 2000);
 }
 
-// === Проверка столкновения игрока с врагом на любом шаге ===
+
 function checkEnemyCollision(prevRow, prevCol, newRow, newCol) {
   if (!evilMode) {
     for(const enemy of enemies) {

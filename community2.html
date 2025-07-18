@@ -65,17 +65,17 @@
   background: #1f2937;
   color: #f3f4f6;
   border: 1px solid #4b5563;
-  padding: 20px 18px;     /* меньше внутренних отступов */
+  padding: 20px 18px;     
   border-radius: 12px;
-  min-width: 220px;       /* уменьшить минимальную ширину */
-  max-width: 350px;       /* уменьшить максимальную ширину */
+  min-width: 220px;       
+  max-width: 350px;       
   box-shadow: 0 0 20px #000;
   z-index: 999;
   opacity: 0;
   pointer-events: none;
   transition: 0.3s ease;
-  max-height: 75vh;       /* ограничить высоту окна */
-  overflow-y: auto;       /* добавить прокрутку, если контент длинный */
+  max-height: 75vh;       
+  overflow-y: auto;       
 }
 
   .modal.active {
@@ -140,7 +140,7 @@
 <div class="space" id="space"></div>
 
 <div class="modal" id="modal">
-  <!-- Added developer photo -->
+  
   <img src="" alt="Developer photo" id="modal-photo" class="modal-photo" />
   <p>X Profile: <a href="#" id="modal-x" target="_blank" rel="noopener noreferrer">View</a></p>
   <div><strong>Website's:</strong></div>
@@ -366,11 +366,26 @@
         { name: "Clobs on Blobs Olive", url: "https://clobs-on-blobs-olive.vercel.app/" }
       ]
     },
-    { name: "@oyetoludan01", avatar: "38.png", x: "https://x.com/oyetoludan01",
-      projects: [
-        { name: "Prover Naire", url: "https://provernaire-frontend.vercel.app/" }
-      ]
-    },
+   {
+  name: "@oyetoludan01",
+  avatar: "38.png",
+  x: "https://x.com/oyetoludan01",
+  projects: [
+    { name: "Prover Naire", url: "https://provernaire-frontend.vercel.app/" },
+    { name: "Pic Breaker", url: "https://pic-breaker.vercel.app" },
+    { name: "Succinct Crab", url: "https://succinctcrab.vercel.app" },
+    { name: "Succinct Jump", url: "https://roblox.com/games/107841367088672/Succint-Jump" },
+    { name: "Succinct Badge", url: "https://succinctbadge.vercel.app" },
+    { name: "Succinct Summer", url: "https://succinctsummer.vercel.app" },
+    { name: "Siccinct Lover", url: "https://succinctlover.netlify.app" },
+    { name: "Succinct Emogi Saga", url: "https://succinctemojisaga.vercel.app" },
+    { name: "Succinct Game", url: "https://succinct-game-videoedits.vercel.app" },
+    { name: "My Hub Self", url: "https://my-hub-self.vercel.app" },
+    { name: "Succinct NotePad", url: "https://succinctnotepad.vercel.app/welcome" },
+    { name: "zkEgg", url: "https://zkegg-omega.vercel.app" },
+    { name: "Succinct Memories", url: "https://succinct-memories.vercel.app" }
+  ]
+},
     { name: "@MrishoLukamba", avatar: "39.png", x: "https://x.com/MrishoLukamba",
       projects: [
         { name: "Vane Web3", url: "https://app.vaneweb3.com/" }
@@ -503,7 +518,8 @@
     },
     { name: "@Mota_kidah", avatar: "63.png", x: "https://x.com/Mota_kidah",
       projects: [
-        { name: "ZK Trivia", url: "https://zk-trivia.vercel.app/" }
+        { name: "ZK Trivia", url: "https://zk-trivia.vercel.app/" },
+        { name: "Hangman Game", url: "https://hangman-zk.vercel.app/" }
       ]
     },
     { name: "@EMPERORBB7", avatar: "64.png", x: "https://x.com/EMPERORBB7",
@@ -549,7 +565,7 @@
     modalX.textContent = dev.x;
     modalProjects.innerHTML = '';
 
-    // Set the photo in modal
+    
     modalPhoto.src = dev.avatar;
     modalPhoto.alt = dev.name + " photo";
 

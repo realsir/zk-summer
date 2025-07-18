@@ -1,20 +1,387 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevsBuild Background</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Succinct Prover Quiz</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      background: url('devsbuild.png') no-repeat center center fixed;
-      background-size: cover;
+      width: 100vw;
+      height: 100vh;
+      background: #ffeef5;
+      overflow: hidden;
+      font-family: monospace;
     }
+
+    #binary-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 200vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .binary-row {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #aa00aa;
+    }
+
+    @keyframes scroll-left {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes scroll-right {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+
+    .scroll-left {
+      animation: scroll-left 190s linear infinite;
+    }
+
+    .scroll-right {
+      animation: scroll-right 190s linear infinite;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      left: 0; right: 0; top: 0; bottom: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255, 182, 193, 0.3);
+      z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s;
+    }
+
+    .popup-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .popup-box {
+      min-width: 260px;
+      max-width: 80vw;
+      background: #ffd6ec;
+      border: 2px solid #aa00aa;
+      padding: 24px 20px 18px;
+      border-radius: 14px;
+      box-shadow: 0 2px 32px rgba(170, 0, 170, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.5s, transform 0.5s;
+      position: relative;
+      z-index: 1001;
+      color: #800080;
+    }
+
+    .popup-overlay.active .popup-box {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .popup-btns {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .popup-btn {
+      min-width: 70px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(170, 0, 170, 0.2);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .popup-btn-green  { background: #21c96b; color: #fff; }
+    .popup-btn-yellow { background: #fff84a; color: #aa00aa; }
+    .popup-btn-red    { background: #e03232; color: #fff; }
+    .popup-btn-gray   { background: #f6d6f6; color: #800080; }
+
+    .popup-btn-green:hover  { background: #1ead5e; }
+    .popup-btn-yellow:hover { background: #fbe534; }
+    .popup-btn-red:hover    { background: #c51a1a; }
+    .popup-btn-gray:hover   { background: #e6bbe6; }
+
+    .strikethrough { text-decoration: line-through; margin-right: 4px; color: #800080; }
+    .purple-text   { color: #c97fff; font-weight: bold; }
+    .succinct-link { color: #a246ff; text-decoration: underline; cursor: pointer; }
   </style>
 </head>
 <body>
 
+  <div id="binary-bg"></div>
+
+  <script>
+    const binaryContainer = document.getElementById("binary-bg");
+    const rowHeight = 20;
+    const rowCount = Math.floor(window.innerHeight / rowHeight);
+
+    function randomBinaryString(len) {
+      let out = "";
+      for (let i = 0; i < len; i++) out += Math.random() > 0.5 ? "1" : "0";
+      return out;
+    }
+    for (let i = 0; i < rowCount + 2; i++) {
+      const row = document.createElement("div");
+      row.className = "binary-row " + (i % 2 === 0 ? "scroll-left" : "scroll-right");
+      row.style.top = `${i * rowHeight}px`;
+      row.textContent = randomBinaryString(500) + "   " + randomBinaryString(500);
+      binaryContainer.appendChild(row);
+    }
+
+    function createPopup({ htmlContent, btns }) {
+      const overlay = document.createElement("div");
+      overlay.className = "popup-overlay";
+      const box = document.createElement("div");
+      box.className = "popup-box";
+      if (htmlContent) {
+        const desc = document.createElement("div");
+        desc.style.fontSize = "18px";
+        desc.style.textAlign = "center";
+        desc.style.lineHeight = "1.4";
+        desc.innerHTML = htmlContent;
+        box.appendChild(desc);
+      }
+      if (Array.isArray(btns)) {
+        const btnsWrap = document.createElement("div");
+        btnsWrap.className = "popup-btns";
+        btns.forEach(btn => {
+          const button = document.createElement("button");
+          button.className = "popup-btn " + (btn.color || "popup-btn-gray");
+          button.textContent = btn.text;
+          button.onclick = btn.onClick;
+          btnsWrap.appendChild(button);
+        });
+        box.appendChild(btnsWrap);
+      }
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+      setTimeout(() => overlay.classList.add("active"), 20);
+      return overlay;
+    }
+
+    function closePopup(popup) {
+      if (!popup) return;
+      popup.classList.remove("active");
+      setTimeout(() => {
+        if (popup.parentNode) popup.parentNode.removeChild(popup);
+      }, 500);
+    }
+
+    function redirectToX(text) {
+      window.open("https://x.com/intent/tweet?text=" + encodeURIComponent(text), "_blank");
+    }
+
+    
+    const quizzesLoaded = {
+      easy: [
+        { question: "What is the Succinct project?", options: [
+          "A) A zk-infrastructure platform for building blockchain apps",
+          "B) A cryptocurrency wallet",
+          "C) A zk-based social network",
+          "D) An NFT marketplace"
+        ], answer: 0 },
+        { question: "What does zkVM stand for in the context of Succinct?", options: [
+          "A) Zero-Knowledge Virtual Machine",
+          "B) Zero-Knowledge Voting Mechanism",
+          "C) Verified Memory Layer",
+          "D) Zonal Kernel Virtual Module"
+        ], answer: 0 },
+        { question: "What is the main goal of Succinct?", options: [
+          "A) Creating NFT collections",
+          "B) Providing easy-to-use zk tools for developers",
+          "C) Developing DAO governance solutions",
+          "D) GUI-based node configuration"
+        ], answer: 1 },
+        { question: "What is the role of the prover network in Succinct?", options: [
+          "A) To generate zk-proofs",
+          "B) To store tokens securely",
+          "C) To vote in decentralized governance",
+          "D) To mine Ethereum"
+        ], answer: 0 },
+        { question: "Which virtual machine is SP1 zkVM compatible with?", options: [
+          "A) Cosmos SDK VM",
+          "B) Ethereum Virtual Machine (EVM)",
+          "C) Bitcoin VM",
+          "D) Substrate VM"
+        ], answer: 1 }
+      ],
+      medium: [
+        { question: "How does Succinct reduce costs when verifying blockchain transactions?", options: [
+          "A) By separating execution from verification and using GPUs",
+          "B) By using a Proof-of-Work algorithm",
+          "C) Through sharding",
+          "D) Through a Layer-0 consensus system"
+        ], answer: 0 },
+        { question: "What is the Proof Marketplace in Succinct?", options: [
+          "A) A decentralized crypto trading platform",
+          "B) A compute marketplace for zk-proofs",
+          "C) An NFT platform for zk art",
+          "D) A token exchange"
+        ], answer: 1 },
+        { question: "What is the core advantage of Succinct’s standardized proof interface?", options: [
+          "A) It simplifies development and enables zk module interoperability",
+          "B) Support for BEP-20 tokens",
+          "C) Integration with private keys",
+          "D) It shortens blockchain block size"
+        ], answer: 0 },
+        { question: "Approximately how much funding did Succinct raise in early investment rounds?", options: [
+          "A) $105 million",
+          "B) $55 million",
+          "C) $15 million",
+          "D) $5 million"
+        ], answer: 1 },
+        { question: "Which of the following is a real-world use case of Succinct technology?", options: [
+          "A) NFT automation",
+          "B) Cross-chain messaging bridges",
+          "C) Custom crypto wallets",
+          "D) Algorithmic stablecoins"
+        ], answer: 1 }
+      ],
+      hard: [
+        { question: "What is the architecture of the Succinct Protocol based on?", options: [
+          "A) Decentralized prover network + zk-aggregators + modular zk-stack",
+          "B) Multisig off-chain coordination",
+          "C) Single-node transaction processing",
+          "D) Sidechain with centralized scheduling"
+        ], answer: 0 },
+        { question: "Why does the SP1 zkVM use GPU-optimization and recursive zk-proofs?", options: [
+          "A) To improve scalability and performance",
+          "B) To generate private keys",
+          "C) To reduce on-chain storage requirements",
+          "D) To accelerate mining processes"
+        ], answer: 0 },
+        { question: "What makes Succinct’s cross-chain interoperability strategy unique?", options: [
+          "A) Trustless infrastructure powered by zk-proofs",
+          "B) API-based relay gates",
+          "C) File-based relay channels",
+          "D) Only supports Cosmos and Polkadot"
+        ], answer: 0 },
+        { question: "What role do crypto-economic incentives play in the Succinct network?", options: [
+          "A) Motivate reliable zk-proof generation by provers",
+          "B) Facilitate fee swapping between users",
+          "C) Set limit orders on proofs",
+          "D) Adjust staking profits"
+        ], answer: 0 },
+        { question: "How does Succinct maintain compatibility across multiple zk proving stacks?", options: [
+          "A) Through standardization of public inputs and outputs",
+          "B) Through binary zk replicas",
+          "C) Through a centralized API",
+          "D) Through off-chain storage solutions"
+        ], answer: 0 }
+      ]
+    };
+
+    let popup1, popup2, popup3, quizPopup;
+    let currentQuiz = null, currentQuestionIndex = 0, correctAnswersCount = 0;
+    let currentLevel = 'easy';
+
+    function startQuizSequence() {
+      popup1 = createPopup({
+        htmlContent: "",
+        btns: [{
+          text: "What?",
+          color: "popup-btn-green",
+          onClick: () => {
+            closePopup(popup1);
+            setTimeout(() => {
+              popup2 = createPopup({
+                htmlContent: "are you ready?",
+                btns: [{
+                  text: "Yes",
+                  color: "popup-btn-green",
+                  onClick: () => {
+                    closePopup(popup2);
+                    setTimeout(showProverPopup, 300);
+                  }
+                }]
+              });
+            }, 300);
+          }
+        }]
+      });
+    }
+
+    function showProverPopup() {
+      popup3 = createPopup({
+        htmlContent: `
+          <span class="strikethrough">Welcome to</span> gProve to
+          <span class="purple-text">Prover?</span>
+          try to pass some intelligent quizzes, test how well you know
+          <a href="https://x.com/SuccinctLabs" target="_blank" class="succinct-link">Succinct</a>.
+        `,
+        btns: [
+          { text: "Easy", color: "popup-btn-green", onClick: () => startQuiz("easy") },
+          { text: "Medium", color: "popup-btn-yellow", onClick: () => startQuiz("medium") },
+          { text: "Hard", color: "popup-btn-red", onClick: () => startQuiz("hard") }
+        ]
+      });
+    }
+
+    function startQuiz(level) {
+      currentLevel = level;
+      closePopup(popup3);
+      currentQuiz = quizzesLoaded[level];
+      currentQuestionIndex = 0;
+      correctAnswersCount = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = currentQuiz[currentQuestionIndex];
+      if (quizPopup) closePopup(quizPopup);
+      const htmlContent = `<div style="text-align:center;font-weight:bold;margin-bottom:16px;">${q.question}</div>`;
+      const buttons = q.options.map((opt, idx) => ({
+        text: opt,
+        color: "popup-btn-gray",
+        onClick: () => {
+          if (idx === q.answer) correctAnswersCount++;
+          currentQuestionIndex++;
+          if (currentQuestionIndex >= currentQuiz.length) showResult();
+          else showQuestion();
+        }
+      }));
+      quizPopup = createPopup({ htmlContent, btns: buttons });
+    }
+
+    function getShareText() {
+      return `I took an ${currentLevel} level test about @SuccinctLabs\n\nTry it:\n> https://zk-summer.vercel.app/\n> Prover?`;
+    }
+
+    function showResult() {
+      closePopup(quizPopup);
+      const resultText = `The test will pass. Your score is ${correctAnswersCount}/${currentQuiz.length}`;
+      const shareText = getShareText();
+      quizPopup = createPopup({
+        htmlContent: `<div style="text-align:center;font-weight:bold;margin-bottom:12px;">${resultText}</div>`,
+        btns: [
+          { text: "Share", color: "popup-btn-green", onClick: () => redirectToX(shareText) },
+          { text: "Back", color: "popup-btn-gray", onClick: () => { closePopup(quizPopup); showProverPopup(); } }
+        ]
+      });
+    }
+
+    setTimeout(startQuizSequence, 2000);
+  </script>
+
 </body>
 </html>
+
+

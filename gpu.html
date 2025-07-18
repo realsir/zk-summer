@@ -49,7 +49,7 @@
       z-index: 7;
     }
 
-    /* Плашка запуска */
+    
     #startOverlay {
       position: fixed;
       top: 0;
@@ -196,7 +196,7 @@
     </div>
   </div>
 
-  <!-- Плашка запуска -->
+  
   <div id="startOverlay">
     <div id="overlayBackground"></div>
     <div id="overlayContent">
@@ -207,7 +207,7 @@
     </div>
   </div>
 
-  <!-- Плашка окончания -->
+  
   <div id="gameOverOverlay" style="display:none">
     <h2>Game Over</h2>
     <div id="finalScoreContainer">Your Score: <span id="finalScore">0</span></div>
@@ -244,7 +244,7 @@ function updateSpeedByScore(score) {
   }
 }
 
-// ✨ Фоновая анимация GPU на startOverlay
+
 function launchOverlayGpuFall() {
   const interval = setInterval(() => {
     if (startOverlay.style.display === 'none') {
@@ -344,8 +344,7 @@ function spawnGpu() {
   game.appendChild(gpu);
 }
 
-// Boosts...
-// (оставьте обычные spawnFireBoost и spawnSnowBoost без изменений)
+
 
 function loseLife() {
   lives--;
@@ -381,7 +380,7 @@ document.getElementById('restartBtn').onclick = () => {
   launchOverlayGpuFall();
 };
 
-// ⏳ Запуск GPU дождя на фоне при старте
+
 window.onload = launchOverlayGpuFall;
 </script>
 </body>
