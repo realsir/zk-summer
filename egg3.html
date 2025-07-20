@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Egg Timer Countdown</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #ffb6d5;
+      box-sizing: border-box;
+    }
+
+    .egg {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      pointer-events: none;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .center-timer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      font-family: 'Titillium Web', Arial, sans-serif;
+      padding: 24px 32px;
+      background: #ffffff;
+      border-radius: 30px;
+      color: #800080;
+      box-shadow: 0 0 30px 0 rgba(255, 255, 255, 0.8);
+      text-align: center;
+      letter-spacing: 1px;
+      min-width: 350px;
+    }
+
+    #countdown {
+      font-size: 26px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #8b00cc 0%, #ff60c4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.3),
+        0 2px 8px rgba(100, 0, 150, 0.3),
+        0 3px 12px rgba(255, 100, 200, 0.2);
+    }
+
+    .tweet-btn {
+      margin-top: 18px;
+      padding: 10px 22px;
+      font-size: 16px;
+      font-weight: 600;
+      background: #1da1f2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .tweet-btn:hover {
+      background: #0d8ddb;
+    }
+
+    .close-btn {
+      position: fixed;
+      top: 18px;
+      right: 32px;
+      font-size: 34px;
+      font-weight: 700;
+      color: #222;
+      background: none;
+      border: none;
+      z-index: 30;
+      cursor: pointer;
+      line-height: 1;
+      user-select: none;
+    }
+
+    @media (max-width: 600px) {
+      .center-timer {
+        padding: 20px 15px;
+        min-width: auto;
+      }
+
+      #countdown {
+        font-size: 20px;
+      }
+
+      .egg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .tweet-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      .close-btn {
+        font-size: 22px;
+        right: 12px;
+        top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="close-btn" onclick="this.style.display='none'">&#10006;</button>
+
+  <div class="center-timer" id="timerBox">
+    <div id="countdown"></div>
+    <button class="tweet-btn" id="tweetButton">Post to X</button>
+  </div>
+
+  <script>
+    const COUNTDOWN_TARGET = new Date(new Date().getFullYear(), 6, 28, 0, 0, 0); // July 28
+    const countdownDiv = document.getElementById('countdown');
+    const tweetButton = document.getElementById('tweetButton');
+    const WEBSITE_URL = 'https://zk-summer.vercel.app/';
+
+    function pad(n) {
+      return n.toString().padStart(2, '0');
+    }
+
+    function getTimeRemaining() {
+      const now = new Date();
+      let diff = COUNTDOWN_TARGET - now;
+      if (diff <= 0) return null;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      diff -= days * 86400000;
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      diff -= hours * 3600000;
+      const minutes = Math.floor(diff / (1000 * 60));
+      diff -= minutes * 60000;
+      const seconds = Math.floor(diff / 1000);
+
+      return { days, hours, minutes, seconds };
+    }
+
+    function updateCountdown() {
+      const timeLeft = getTimeRemaining();
+      if (!timeLeft) {
+        countdownDiv.textContent = "The event has started!";
+        tweetButton.disabled = true;
+        tweetButton.style.background = "#ccc";
+        return;
+      }
+
+      countdownDiv.innerHTML = `Time left until July 28:<br>
+        ${pad(timeLeft.days)} days ${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)}`;
+    }
+
+    tweetButton.addEventListener('click', () => {
+      const timeLeft = getTimeRemaining();
+      if (!timeLeft) return;
+      const text = `⏳ Countdown: ${pad(timeLeft.days)}d ${pad(timeLeft.hours)}:${pad(timeLeft.minutes)}:${pad(timeLeft.seconds)} until July 28! 🥚\n${WEBSITE_URL}`;
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      window.open(twitterUrl, '_blank');
+    });
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // === Egg logic ===
+    const NUM_EGGS = 60;
+    const EGGS = [];
+    const eggSize = window.innerWidth < 600 ? 28 : 44;
+
+    function getTimerRect() {
+      return document.getElementById('timerBox').getBoundingClientRect();
+    }
+
+    function isInsideTimer(x, y, size, timerRect) {
+      return (
+        x + size > timerRect.left &&
+        x < timerRect.right &&
+        y + size > timerRect.top &&
+        y < timerRect.bottom
+      );
+    }
+
+    function getRandomEggPosition(timerRect) {
+      let tries = 0;
+      while (tries < 30) {
+        const x = Math.random() * (window.innerWidth - eggSize);
+        const y = Math.random() * (window.innerHeight - eggSize);
+        if (!isInsideTimer(x, y, eggSize, timerRect)) return { x, y };
+        tries++;
+      }
+      return { x: 0, y: 0 };
+    }
+
+    function getRandomVelocity() {
+      let v = ((Math.random() - 0.5) * 2);
+      if (Math.abs(v) < 0.7) v = v > 0 ? 0.7 : -0.7;
+      return v;
+    }
+
+    function initializeEggs() {
+      const timerRect = getTimerRect();
+      for (let i = 0; i < NUM_EGGS; i++) {
+        const egg = document.createElement('img');
+        egg.src = 'egg3.png';
+        egg.className = 'egg';
+        const { x, y } = getRandomEggPosition(timerRect);
+        egg.style.left = x + 'px';
+        egg.style.top = y + 'px';
+        egg.dataset.dx = getRandomVelocity().toFixed(2);
+        egg.dataset.dy = getRandomVelocity().toFixed(2);
+        document.body.appendChild(egg);
+        EGGS.push(egg);
+      }
+    }
+
+    initializeEggs();
+
+    function animateEggs() {
+      const timerRect = getTimerRect();
+      EGGS.forEach(egg => {
+        let x = parseFloat(egg.style.left);
+        let y = parseFloat(egg.style.top);
+        let dx = parseFloat(egg.dataset.dx);
+        let dy = parseFloat(egg.dataset.dy);
+
+        x += dx;
+        y += dy;
+
+        if (x < 0) { x = 0; dx *= -1; }
+        if (x > window.innerWidth - eggSize) { x = window.innerWidth - eggSize; dx *= -1; }
+        if (y < 0) { y = 0; dy *= -1; }
+        if (y > window.innerHeight - eggSize) { y = window.innerHeight - eggSize; dy *= -1; }
+
+        const eggRect = {
+          left: x,
+          top: y,
+          right: x + eggSize,
+          bottom: y + eggSize
+        };
+
+        const isColliding =
+          eggRect.right > timerRect.left + 2 &&
+          eggRect.left < timerRect.right - 2 &&
+          eggRect.bottom > timerRect.top + 2 &&
+          eggRect.top < timerRect.bottom - 2;
+
+        if (isColliding) {
+          const prevX = x - dx, prevY = y - dy;
+          if (prevX + eggSize <= timerRect.left) {
+            x = timerRect.left - eggSize - 1;
+            dx = -Math.abs(dx);
+          } else if (prevX >= timerRect.right) {
+            x = timerRect.right + 1;
+            dx = Math.abs(dx);
+          }
+          if (prevY + eggSize <= timerRect.top) {
+            y = timerRect.top - eggSize - 1;
+            dy = -Math.abs(dy);
+          } else if (prevY >= timerRect.bottom) {
+            y = timerRect.bottom + 1;
+            dy = Math.abs(dy);
+          }
+        }
+
+        egg.style.left = x + 'px';
+        egg.style.top = y + 'px';
+        egg.dataset.dx = dx.toFixed(2);
+        egg.dataset.dy = dy.toFixed(2);
+      });
+      requestAnimationFrame(animateEggs);
+    }
+
+    animateEggs();
+  </script>
+</body>
+</html>
